@@ -2,7 +2,7 @@ from django import forms
 from .models import Student
 from django.contrib.auth.hashers import make_password
 class LoginForm(forms.Form):
-    email = forms.CharField(max_length=100)
+    email = forms.CharField(max_length=100) #previously wriiten as username, but changed to email
     password = forms.CharField(widget=forms.PasswordInput)
 
 class SignupForm(forms.ModelForm):
