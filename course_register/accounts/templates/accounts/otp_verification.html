@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="d-flex justify-content-center align-items-center vh-100" style="background: url('your-background-image.jpg') no-repeat center center/cover;">
+    <div class="card shadow-lg p-4" style="max-width: 500px; width: 100%; border-radius: 12px; backdrop-filter: blur(10px); background: rgba(255, 255, 255, 0.85);">
+        <div class="card-header text-center bg-primary text-white rounded">
+            <h2 class="mb-0">OTP Verification</h2>
+        </div>
+        <div class="card-body">
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+            <form method="post">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <label for="otp" class="form-label">Enter OTP</label>
+                    <input type="text" class="form-control" id="otp" name="otp" required>
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Verify OTP</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

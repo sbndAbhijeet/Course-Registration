@@ -74,3 +74,8 @@ python -m django --version
 ---
 Happy coding! 🚀
 
+
+
+# requirements
+pillow
+sendgrid

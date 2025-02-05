@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="d-flex justify-content-center align-items-center vh-100" style="   no-repeat center center/cover;">
+    <img src="{% static 'images/register.png' %}" alt="register">
+    <div class="card p-4 shadow-lg" style="max-width: 400px; width: 100%; border-radius: 12px; backdrop-filter: blur(10px); background: rgba(255, 255, 255, 0.7);">
+        <div class="text-center">
+            <div class="rounded-circle bg-primary text-white align-self-center d-flex justify-center justify-content-center align-items-center mb-3" style="width: 100px; height: 100px; font-size: 24px;">
+                <img
+                class='rounded-circle img-fluid align-self-center ' 
+                src="{% static "images/logo.png" %}" alt="logo">
+            </div>
+            <h4 class="mb-4">Gradient Course Registration</h4>
+        </div>
+        
+        <h4 class="text-center mb-4">Login</h4>
+        
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endfor %}
+        {% endif %}
+        
+        <form method="post" id="loginForm">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary w-100" id="loginButton">
+                <span class="spinner-border spinner-border-sm d-none" id="spinner" role="status" aria-hidden="true"></span>
+                Login
+            </button>
+        </form>
+        
+        <p class="text-center mt-3">Don't have an account? <a href="{% url 'signup' %}">Sign Up</a></p>
+    </div>
+</div>
+
+<script>
+    document.getElementById('loginForm').addEventListener('submit', function() {
+        var loginButton = document.getElementById('loginButton');
+        var spinner = document.getElementById('spinner');
+        loginButton.disabled = true;  // Disable the button
+        spinner.classList.remove('d-none');  // Show the spinner
+    });
+</script>
+{% endblock %}
