@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "crispy_forms",
     "crispy_bootstrap5",
     'accounts',
+    'widget_tweaks',
 ]
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
@@ -147,3 +148,6 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')  # Fetch email from .env
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')  # Fetch password from .env
 DEFAULT_FROM_EMAIL = os.getenv('EMAIL_HOST_USER')  # Use the same email address for default
+
+
+LOGIN_REDIRECT_URL = '/' 

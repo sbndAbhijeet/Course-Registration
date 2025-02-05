@@ -2,7 +2,7 @@ from django.db import models
 from django.core.exceptions import ValidationError
 
 def validate_email_format(value):
-    """Validate email format: {9-digit}@iiitvadodara.ac.in"""
+    """Validate email format: {ending with}@iiitvadodara.ac.in"""
     if not value.endswith("@iiitvadodara.ac.in"):
         raise ValidationError("Email must end with @iiitvadodara.ac.in")
     student_id_part = value.split("@")[0]
@@ -15,7 +15,7 @@ class Student(models.Model):
     student_name = models.CharField(max_length=255)
     gender = models.CharField(max_length=10)
     college_id = models.CharField(max_length=20)
-    email = models.EmailField()
+    email = models.EmailField(primary_key=True, unique=True, validators=[validate_email_format])
     department = models.CharField(max_length=100)
     year_of_study = models.CharField(max_length=10)
     phone_number = models.CharField(max_length=15)

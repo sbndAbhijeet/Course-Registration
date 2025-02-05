@@ -27,6 +27,11 @@ def login(request):
         form = LoginForm()
     return render(request, 'accounts/login.html', {'form': form})
 
+def logout(request):
+    if 'student_email' in request.session:
+        del request.session['student_email']  # Clear session
+    return redirect('login')
+
 def signup(request):
     if request.method == 'POST':
         form = SignupForm(request.POST)
