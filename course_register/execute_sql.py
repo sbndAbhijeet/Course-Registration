@@ -9,7 +9,7 @@ with open("course_data.sql", "r", encoding="utf-8") as f:
     sql_query = f.read().strip()  # Read and clean up the SQL command
 
 try:
-    cursor.execute(sql_query)  # Execute query
+    cursor.executescript(sql_query)  # Execute query
     results = cursor.fetchall()  # Fetch results
 
     if results:
