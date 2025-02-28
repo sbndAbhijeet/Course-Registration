@@ -153,4 +153,5 @@ EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')  # Fetch password from .e
 DEFAULT_FROM_EMAIL = os.getenv('EMAIL_HOST_USER')  # Use the same email address for default
 
 
-LOGIN_REDIRECT_URL = '/' 
+LOGIN_URL = '/login/' 
+LOGIN_REDIRECT_URL = '/login/dashboard/'

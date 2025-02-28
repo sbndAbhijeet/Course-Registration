@@ -1,7 +1,13 @@
 from django import forms
-from .models import StudentRegistration
+from .models import StudentRegistration, Course
 
 class StudentRegistrationForm(forms.ModelForm):
+    selected_courses = forms.ModelMultipleChoiceField(
+        queryset=Course.objects.all(),
+        widget=forms.MultipleHiddenInput(),  # Hidden field to store checkboxes data
+        required=False
+    )
+
     class Meta:
         model = StudentRegistration
         fields = "__all__"

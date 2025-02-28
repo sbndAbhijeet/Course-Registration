@@ -7,6 +7,9 @@ from django.conf import settings
 import random
 from django.contrib import messages
 
+# Helper function to check if the user is logged in
+def is_authenticated(request):
+    return 'student_email' in request.session
 
 def login(request):
     if request.method == 'POST':
@@ -17,7 +20,9 @@ def login(request):
             try:
                 student = Student.objects.get(email=username)
                 if check_password(password, student.password):
-                    # Redirect to dashboard
+                    # Set session variable to indicate the user is logged in
+                    request.session['student_email'] = student.email
+                    messages.success(request, "Logged in successfully!")
                     return redirect('dashboard')
                 else:
                     form.add_error(None, "Invalid credentials.")
@@ -30,6 +35,7 @@ def login(request):
 def logout(request):
     if 'student_email' in request.session:
         del request.session['student_email']  # Clear session
+        messages.success(request, "Logged out successfully!")
     return redirect('login')
 
 def signup(request):
@@ -58,11 +64,16 @@ def signup(request):
         form = SignupForm()
     return render(request, 'accounts/signup.html', {'form': form})
 
-
 def dashboard(request):
+    # Check if the user is logged in
+    if not is_authenticated(request):
+        messages.error(request, "You need to log in to access this page.")
+        return redirect('login')
+    
     return render(request, 'accounts/dashboard.html')
 
 def otp_verification(request):
+    # Check if the user is logged in (optional, since this is part of the signup process)
     if request.method == 'POST':
         user_otp = request.POST.get('otp')
         stored_otp = request.session.get('otp')

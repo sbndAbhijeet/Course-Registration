@@ -20,7 +20,6 @@ class Student(models.Model):
     year_of_study = models.CharField(max_length=10)
     phone_number = models.CharField(max_length=15)
     password = models.CharField(max_length=255)
-    confirm_password = models.CharField(max_length=255)
     address = models.TextField(null=True, blank=True)
     date_of_birth = models.DateField(null=True, blank=True)
 
