@@ -1,54 +1,104 @@
 from django.http import JsonResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .forms import StudentRegistrationForm
-from .models import Course, StudentRegistration
+from .models import Course, StudentRegistration, Enrolled, Course, FacultyAdvisor
+from accounts.models import Student
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.contrib import messages
+from django.contrib.auth import logout
 
-# Helper function to check if the user is logged in
-def is_authenticated(request):
-    return 'student_email' in request.session
-
+@login_required
 def register_student(request):
-    # Check if the user is logged in
-    if not is_authenticated(request):
-        messages.error(request, "You need to log in to access this page.")
-        return redirect('login')  # Redirect to the login page
+    student_email = request.session.get("student_email")
+
+    if not student_email:
+        messages.error(request, "User session expired. Please log in again.")
+        return redirect('login')
+    
+    student = get_object_or_404(Student, email=student_email)
+    registration = StudentRegistration.objects.filter(student=student).first()
+    # try: 
+    #     registration = StudentRegistration.objects.get(student = student)
+    # except StudentRegistration.DoesNotExist:
+    #     registration = None
+
 
     if request.method == "POST":
-        form = StudentRegistrationForm(request.POST, request.FILES)  # Handle form & file data
+        print("POST data:", request.POST) #debug
+        print("Files:", request.FILES)
+        
+        form = StudentRegistrationForm(request.POST, request.FILES, instance=registration)  # Handle form & file data
 
         if form.is_valid():
-            student = form.save(commit=False)  # Save the form but do not commit to DB yet
-            student.save()  # Save student record first
+            print("Cleaned Data:", form.cleaned_data)  # Debugging
+            registration = form.save(commit=False)  # Save the form but do not commit to DB yet
+            registration.student = student
+            registration.email = student.email  # Ensure email is set
+            registration.name = request.POST.get('name', '')  # Get name from form input
+            registration.branch_name = request.POST.get('branch', 'CSE/IT')
+            registration.faculty = form.cleaned_data['faculty']
+            registration.save()  # Save student record first
+            print("Registration saved with id:", registration.id) #confirm save
+            form.save_m2m() #save selected courses
+            print("ManyToMany saved:", registration.selected_courses.all()) #confirm courses
 
-            # ✅ Get selected courses properly and ensure they are valid Course objects
-            selected_course_ids = request.POST.getlist("selected_courses")  # Get selected courses as list
-            valid_courses = Course.objects.filter(id__in=selected_course_ids)  # Fetch valid Course objects
-            student.selected_courses.set(valid_courses)  # Assign Many-to-Many field properly
 
-            return render(request, "course_registration/success.html")
+            try:
+                enrolled, created = Enrolled.objects.get_or_create(
+                    student=student,
+                    defaults={'college_id': student.college_id}
+                )
+                enrolled.selected_courses.set(registration.selected_courses.all())
+                enrolled.faculty = registration.faculty
+                enrolled.save()
+                print("Enrolled saved with ID:", enrolled.id)
+            except Exception as e:
+                print("Error saving Enrolled:", str(e))
+
+            messages.success(request, "Registration submitted successfully.")
+            return redirect("registration_success")
+        else:
+            print("Form errors:", form.errors)
+
+            messages.success(request, "Registration submitted successfully.")
+            return redirect("registration_success")
 
     else:
-        form = StudentRegistrationForm()
+        form = StudentRegistrationForm(instance=registration)
 
+    # print("Logged in user:", request.user.email)  # Debugging (sbndabhijeet@gmail.com)
+    # print("Logged in user:", student_email)  # Debugging (202351127@iiitvadodara.ac.in)
+    faculty_advisors = FacultyAdvisor.objects.all()
+    print("Faculty Advisors:", list(faculty_advisors))  # Debug: Check if data exists
     return render(request, "course_registration/register.html", {"form": form})
 
+@login_required
 def registration_success(request):
-    # Check if the user is logged in
-    if not is_authenticated(request):
-        messages.error(request, "You need to log in to access this page.")
-        return redirect('login')  # Redirect to the login page
-
     return render(request, "course_registration/success.html")
 
 def get_courses(request):
     # This view does not require authentication since it's used for AJAX requests
-    semester = request.GET.get("semester")
-    if semester:
-        try:
-            semester = int(semester)  # Convert to integer
-            courses = Course.objects.filter(semester=semester).values("id", "name", "credits")
-            return JsonResponse(list(courses), safe=False)
-        except ValueError:
-            return JsonResponse({"error": "Invalid semester value"}, status=400)
-    return JsonResponse({"error": "No semester provided"}, status=400)
+    semester = request.GET.get('semester')
+    branch = request.GET.get('branch', '')
+
+    if not semester:
+        return JsonResponse([], safe=False)
+    
+    courses = Course.objects.filter(semester=semester)
+
+    if branch:
+        print(f"Filtering for branch: {branch}")  # Debugging
+        if branch == 'CSE/IT':
+            courses = courses.filter(branch_name__in=['CSE', 'IT'])
+        else:
+            courses = courses.filter(branch_name=branch)
+
+    if not courses.exists():
+        print("No courses found!")  # Debugging
+        return JsonResponse([], safe=False)
+
+    unique_courses = {course['course_code']: course for course in courses.values('id', 'course_code', 'name', 'credits')}.values()
+
+    return JsonResponse(list(unique_courses), safe=False)
+

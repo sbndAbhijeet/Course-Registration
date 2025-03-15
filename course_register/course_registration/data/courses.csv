@@ -1,0 +1,71 @@
+semester,course_code,name,credits,branch_name
+1,MA101,"Mathematics-I (Linear Algebra and Matrices)","3-1-0 : 4",CSE & IT
+1,PH100,"Mechanics and Thermodynamics","3-1-0 : 4",CSE & IT
+1,PH160,"Mechanics and Thermodynamics Lab","0-0-2 : 1",CSE & IT
+1,IT101,"Computer Programming and Problem Solving","3-0-0 : 3",CSE & IT
+1,IT161,"Computer Programming and Problem Solving Lab","0-0-3 : 2",CSE & IT
+1,EC100,"Basic Electronic Circuits","3-1-0 : 4",CSE & IT
+1,EC160,"Basic Electronic Circuits Lab","0-0-3 : 2",CSE & IT
+1,HS101,"Spoken and Written Communication","2-0-2 : 3",CSE & IT
+2,MA102,"Mathematics-II (Discrete Mathematics)","3-1-0 : 4",CSE & IT
+2,PH110,"Waves and Electromagnetics","3-1-0 : 4",CSE & IT
+2,PH170,"Waves and Electromagnetics Lab","0-0-2 : 1",CSE & IT
+2,EE100,"Basic Electrical Engineering","3-1-0 : 4",CSE & IT
+2,EE160,"Basic Electrical Engineering Lab","0-0-3 : 2",CSE & IT
+2,CS102,"Introduction to Data Structures","3-0-0 : 3",CSE & IT
+2,CS162,"Introduction to Data Structures Lab","0-1-2 : 2",CSE & IT
+2,HS102,"Science Technology and Society","3-0-0 : 3",CSE & IT
+3,SC201,"Environmental Science","2-0-0 : 2",CSE & IT
+3,MA201,"Probability and Statistics","3-1-0 : 4",CSE & IT
+3,HS201,"Technical Writing","1-1-2 : 3",CSE & IT
+3,CS201,"Object Oriented Design & Programming","3-0-0 : 3",CSE & IT
+3,CS261,"Object Oriented Design & Programming Lab","0-0-3 : 2",CSE & IT
+3,CS203,"Design and Analysis of Algorithms","3-0-0 : 3",CSE & IT
+3,CS263,"Design and Analysis of Algorithms Lab","0-0-3 : 2",CSE & IT
+3,EC201,"Digital Logic Design","3-0-0 : 3",CSE & IT
+3,EC261,"Digital Logic Design Lab","0-0-2 : 1",CSE & IT
+4,MA202,"Numerical Techniques","0-1-2 : 3",CSE
+4,HS202,"Economics","3-0-0 : 3",CSE
+4,CS202,"System Software","3-0-0 : 3",CSE
+4,CS204,"Database Management System","3-0-0 : 3",CSE
+4,CS262,"Database Management System Lab","0-0-3 : 2",CSE
+4,CS206,"Operating Systems","3-0-0 : 3",CSE
+4,CS266,"Operating Systems Lab","0-0-3 : 2",CSE
+4,CS208,"Computer Organization and Architecture","3-0-0 : 3",CSE
+4,CS268,"Computer Organization and Architecture Lab","0-0-2 : 1",CSE
+4,HS202,"Economics","3-0-0 : 3",IT
+4,IT202,"Web Technology","3-0-0 : 3",IT
+4,IT262,"Web Technology Lab","0-0-3 : 2",IT
+4,CS204,"Database Management System","3-0-0 : 3",IT
+4,CS262,"Database Management System Lab","0-0-3 : 2",IT
+4,CS206,"Operating Systems","3-0-0 : 3",IT
+4,CS266,"Operating Systems Lab","0-0-3 : 2",IT
+4,CS208,"Computer Organization and Architecture","3-0-0 : 3",IT
+4,CS268,"Computer Organization and Architecture Lab","0-0-2 : 1",IT
+5,CS301,"Computer Networks","3-0-0 : 3",CSE
+5,CS361,"Computer Networks Lab","0-0-2 : 1",CSE
+5,CS303,"Software Engineering","3-0-0 : 3",CSE
+5,CS363,"Software Engineering Lab","0-0-3 : 2",CSE
+5,CS305,"Formal Language and Automata Theory","3-0-0 : 3",CSE
+5,CS391,"Design Project","0-0-3 : 3",CSE
+5,CS301,"Computer Networks","3-0-0 : 3",IT
+5,CS361,"Computer Networks Lab","0-0-2 : 1",IT
+5,CS303,"Software Engineering","3-0-0 : 3",IT
+5,CS363,"Software Engineering Lab","0-0-3 : 2",IT
+5,IT301,"Information Security","3-0-0 : 3",IT
+5,IT361,"Information Security Lab","0-0-2 : 1",IT
+5,IT391,"Design Project","0-0-3 : 3",IT
+6,CS302,"Artificial Intelligence","3-0-0 : 3",CSE
+6,CS362,"Artificial Intelligence Lab","0-0-2 : 1",CSE
+6,CS304,"Introduction to Cryptography and Network Security","3-0-0 : 3",CSE
+6,CS364,"Introduction to Cryptography and Network Security Lab","0-0-2 : 1",CSE
+6,IT302,"Software Project Management","3-0-0 : 3",IT
+6,IT362,"Software Project Management Lab","0-0-3 : 2",IT
+6,IT304,"Information System","3-0-0 : 3",IT
+7,CS401,"Introduction to Distributed and Parallel Computing","3-0-0 : 3",CSE
+7,CS461,"Introduction to Distributed and Parallel Computing Lab","0-0-2 : 1",CSE
+7,CS491,"Research/Industrial Internship","0-0-0 : 3",CSE
+7,IT401,"System Administration and Maintenance","2-0-0 : 2",IT
+7,IT461,"System Administration and Maintenance Lab","0-0-3 : 2",IT
+7,IT491,"Research/Industrial Internship","0-0-0 : 3",IT
+8,"CS490/IT490","B. Tech. Project","0-0-36 : 18", CSE & IT

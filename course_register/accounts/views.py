@@ -9,7 +9,7 @@ from django.contrib import messages
 
 # Helper function to check if the user is logged in
 def is_authenticated(request):
-    return 'student_email' in request.session
+    return request.user.is_authenticated or 'student_email' in request.session
 
 def login(request):
     if request.method == 'POST':
