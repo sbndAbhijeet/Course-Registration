@@ -8,9 +8,9 @@ class Course(models.Model):
     ]
 
     semester = models.IntegerField()
-    course_code = models.CharField(max_length=10, default="Unknown")
+    course_code = models.CharField(max_length=15, default="Unknown")
     name = models.CharField(max_length=255)
-    credits = models.CharField(max_length=10)  # Format: "L-T-P : C"
+    credits = models.CharField(max_length=15)  # Format: "L-T-P : C"
     branch_name = models.CharField(max_length=10, choices=BRANCH_CHOICES, default="CSE/IT")  # Mapping courses to branch
 
     def __str__(self):

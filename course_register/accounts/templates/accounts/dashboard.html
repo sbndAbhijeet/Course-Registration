@@ -1,10 +1,159 @@
-{% extends 'base.html' %}
-{% block content %}
-<div class="container justify-center">
-    <h2>Welcome to the Dashboard 😁</h2>
-    <!-- Assuming you're using Bootstrap for styling -->
-<a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
-<a href="{% url 'register_student' %}" class="btn btn-dark">Register for a semester</a>
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="icon" href="{% static "images/icon.png" %}">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom Styles -->
+    <style>
+        .sidebar {
+            background: #343a40;
+        }
+        .sidebar .nav-link {
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background 0.3s;
+        }
+        .sidebar .nav-link:hover {
+            background: #495057;
+        }
+        .sidebar .nav-link.active {
+            background: #007bff;
+        }
+        .main-content {
+            background: #f8f9fa;
+            min-height: 100vh;
+            padding-bottom: 20px;
+        }
+        .card {
+            border: none;
+            border-radius: 10px;
+        }
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+    </style>
 
-</div>
-{% endblock %}
+</head>
+<body>
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <div class="bg-dark text-white sidebar" style="width: 250px; min-height: 100vh; position: fixed;">
+            <div class="p-4">
+                <h4 class="text-center">Course Registration</h4>
+                <hr class="bg-light">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link text-white active" href="{% url 'dashboard' %}">
+                            <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'register_student' %}">
+                            <i class="fas fa-book me-2"></i> Register for a Semester
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'all_courses' %}">
+                            <i class="fas fa-list me-2"></i> View All Courses
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'contact_us' %}">
+                            <i class="fas fa-address-book me-2"></i> Contact Us
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'logout' %}">
+                            <i class="fas fa-sign-out-alt me-2"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content" style="margin-left: 250px; width: calc(100% - 250px);">
+            <!-- Navbar -->
+            <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="{% url 'dashboard' %}">
+                        <img src="{% static 'images/institute1.png' %}" alt="Institute Logo" style="height: 40px;">
+                        IIIT Vadodara
+                    </a>
+                    <div class="ms-auto d-flex align-items-center">
+                        <span class="me-3 text-muted">Welcome, {{ request.session.student_email }} 😁</span>
+                        <a href="{% url 'logout' %}" class="btn btn-danger btn-sm">Logout</a>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Dashboard Content -->
+            <div class="container mt-4">
+                <h2 class="mb-4">Dashboard Overview</h2>
+
+                <!-- User Information Card -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card shadow-sm mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title">Student Information</h5>
+                                <hr>
+                                <p><strong>Email:</strong> {{ request.session.student_email }}</p>
+                                <p><strong>College ID:</strong> {{ student.college_id }}</p>
+                                {% if registration %}
+                                    <p><strong>Name:</strong> {{ registration.name }}</p>
+                                    <p><strong>Branch:</strong> {{ registration.branch_name }}</p>
+                                    <p><strong>Semester:</strong> {{ registration.semester_applying_for }}</p>
+                                {% else %}
+                                    <p class="text-muted">No registration data available. Please register for a semester.</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions Card -->
+                    <div class="col-md-6">
+                        <div class="card shadow-sm mb-4">
+                            <div class="card-body">
+                                <h5 class="card-title">Quick Actions</h5>
+                                <hr>
+                                <a href="{% url 'register_student' %}" class="btn btn-primary w-100 mb-2">Register for a Semester</a>
+                                <a href="{% url 'all_courses' %}" class="btn btn-info w-100 mb-2">View All Courses</a>
+                                <a href="{% url 'contact_us' %}" class="btn btn-secondary w-100">Contact Us</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Registrations or Enrollments -->
+                {% if registration %}
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">Recent Registration</h5>
+                            <hr>
+                            <p><strong>Semester:</strong> {{ registration.semester_applying_for }}</p>
+                            <p><strong>Faculty Advisor:</strong> {{ registration.faculty.name }}</p>
+                            <p><strong>Selected Courses:</strong></p>
+                            <ul>
+                                {% for course in registration.selected_courses.all %}
+                                    <li>{{ course.name }} ({{ course.course_code }})</li>
+                                {% empty %}
+                                    <li>No courses selected.</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <!-- Font Awesome for Icons -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+</body>
+
+
