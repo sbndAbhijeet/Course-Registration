@@ -83,13 +83,15 @@ def reset_password(request):
         
         try:
             student = Student.objects.get(email=email)
-            student.set_password(password)
+            #Hash the new password manually
+            hashed_password = make_password(password)
+            student.password = hashed_password # Update the password field
             student.save()
             del request.session['email_for_reset']
             del request.session['otp']
             messages.success(request, 'Password reset successfully! Please log in.')
             return redirect('login')
-        except Student.DoesExist:
+        except Student.DoesNotExist:
             messages.error(request, 'No student found with this email.')
             return redirect('forgot_password')
 
