@@ -1,0 +1,267 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Profile - IIIT Vadodara</title>
+    <link rel="icon" href="{% static 'images/icon.png' %}" />
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background-image: url("{% static 'images/c4.png' %}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+        .sidebar {
+            background: #343a40;
+            width: 250px;
+            min-height: 100vh;
+            position: fixed;
+        }
+        .sidebar .nav-link {
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background 0.3s;
+            color: white;
+        }
+        .sidebar .nav-link:hover {
+            background: #495057;
+        }
+        .sidebar .nav-link.active {
+            background: #007bff;
+        }
+        .main-content {
+            min-height: 100vh;
+            margin-left: 250px;
+            width: calc(100% - 250px);
+            padding-bottom: 20px;
+        }
+        .header {
+            background-color: rgba(200, 130, 60, 0.95);
+            padding: 15px 0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        .header:hover {
+            background-color: rgba(180, 115, 50, 0.95);
+        }
+        .logo {
+            height: 90px;
+            filter: brightness(1.2);
+        }
+        .college-name {
+            color: #ffffff;
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-align: center;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+        .navbar-nav .nav-link {
+            color: #ffffff !important;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+        .navbar-nav .nav-link:hover {
+            color: rgba(237, 230, 134, 0.9) !important;
+            text-decoration: none;
+        }
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.7);
+            max-width: 500px;
+            width: 100%;
+            margin: 20px auto;
+        }
+        .card-header {
+            background: linear-gradient(90deg, #007bff, #0056b3);
+            color: white;
+            border-radius: 12px 12px 0 0;
+            padding: 15px;
+            text-align: center;
+        }
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0;
+        }
+        .btn-primary {
+            background: linear-gradient(90deg, #007bff, #0056b3);
+            border: none;
+        }
+        .btn-primary:hover {
+            background: linear-gradient(90deg, #0056b3, #003f7f);
+        }
+        .alert {
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Container -->
+    <div class="bg-dark text-white sidebar" style="width: 250px; min-height: 100vh; position: fixed;">
+        <div class="p-4">
+            <h4 class="text-center">Course Registration</h4>
+            <hr class="bg-light">
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'dashboard' %}">
+                        <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white active" href="{% url 'profile' %}">
+                        <i class="fas fa-user me-2"></i> View Profile
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'register_student' %}">
+                        <i class="fas fa-book me-2"></i> Register for a Semester
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'all_courses' %}">
+                        <i class="fas fa-list me-2"></i> View All Courses
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'contact_us' %}">
+                        <i class="fas fa-address-book me-2"></i> Contact Us
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="{% url 'logout' %}">
+                        <i class="fas fa-sign-out-alt me-2"></i> Logout
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Navbar -->
+            <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="{% url 'dashboard' %}">
+                        <img src="{% static 'images/institute1.png' %}" alt="Institute Logo" style="height: 40px;">
+                        IIIT Vadodara
+                    </a>
+                    <div class="ms-auto d-flex align-items-center">
+                        <span class="me-3 text-muted">Welcome, {{ request.session.student_email }} 😁</span>
+                        <a href="{% url 'logout' %}" class="btn btn-danger btn-sm">Logout</a>
+                    </div>
+                </div>
+            </nav>
+            <!-- Profile Form -->
+            <div class="d-flex justify-content-center align-items-center">
+                <div class="card p-4 shadow-lg" style="max-width: 500px; width: 100%;">
+                    <div class="card-header">
+                        <h2 class="card-title">Edit Profile</h2>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label class="form-label">Profile Image</label>
+                                <div class="text-center mb-3">
+                    
+                                    <img src="{% if student.profile_image %}{{ student.profile_image.url }}{% else %}{% static 'images/default.png' %}{% endif %}" alt="Profile" class="rounded-circle shadow-sm mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+
+                                </div>
+                                <input type="file" name="profile_image" class="form-control" accept="image/*">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Name</label>
+                                <input type="text" name="student_name" value="{{ student.student_name }}" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Gender</label>
+                                <select name="gender" class="form-control" required>
+                                    <option value="Male" {% if student.gender == "Male" %}selected{% endif %}>Male</option>
+                                    <option value="Female" {% if student.gender == "Female" %}selected{% endif %}>Female</option>
+                                    <option value="Other" {% if student.gender == "Other" %}selected{% endif %}>Other</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">College ID</label>
+                                <input type="text" name="college_id" value="{{ student.college_id }}" class="form-control" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="email" name="email" value="{{ student.email }}" class="form-control" readonly>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Department</label>
+                                <input type="text" name="department" value="{{ student.department }}" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Year of Study</label>
+                                <input type="text" name="year_of_study" value="{{ student.year_of_study }}" class="form-control" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Phone Number</label>
+                                <input type="tel" name="phone_number" value="{{ student.phone_number }}" class="form-control" pattern="[0-9]{10}" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Address</label>
+                                <textarea name="address" class="form-control">{{ student.address|default:'' }}</textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Date of Birth</label>
+                                <input type="date" name="date_of_birth" value="{{ student.date_of_birth|date:'Y-m-d' }}" class="form-control">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">New Password (leave blank to keep current)</label>
+                                <input type="password" name="password" id="new-password" class="form-control" minlength="8">
+                            </div>
+                            <div class="mb-3" id="confirm-password-div" style="display: none;">
+                                <label class="form-label">Confirm New Password</label>
+                                <input type="password" name="confirm_password" id="confirm-password" class="form-control">
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100">Save Changes</button>
+                        </form>
+                        {% comment %} {% if messages %}
+                            <div class="alert alert-success mt-3" role="alert">
+                                {{ messages }}
+                            </div>
+                        {% endif %} {% endcomment %}
+                        <p class="text-center mt-3"><a href="{% url 'dashboard' %}">Back to Dashboard</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Show/hide confirm password field based on new password input
+        const newPasswordInput = document.getElementById('new-password');
+        const confirmPasswordDiv = document.getElementById('confirm-password-div');
+        const confirmPasswordInput = document.getElementById('confirm-password');
+
+        newPasswordInput.addEventListener('input', function() {
+            if (newPasswordInput.value.length > 0) {
+                confirmPasswordDiv.style.display = 'block';
+                confirmPasswordInput.setAttribute('required', 'required');
+            } else {
+                confirmPasswordDiv.style.display = 'none';
+                confirmPasswordInput.removeAttribute('required');
+            }
+        });
+    </script>
+</body>
+</html>

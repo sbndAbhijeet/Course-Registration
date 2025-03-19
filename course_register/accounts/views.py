@@ -200,3 +200,36 @@ def dashboard(request):
         'student': student,
         'registration': registration,
     })
+
+@login_required
+def profile(request):
+    student_email = request.session.get("student_email")
+    if not student_email:
+        return redirect('login?toast_type=error&toast_title=Error&toast_message=You need to log in to access this page.')
+
+    student = get_object_or_404(Student, email=student_email)
+
+    if request.method == 'POST':
+        student.student_name = request.POST.get('student_name', student.student_name)
+        student.gender = request.POST.get('gender', student.gender)
+        student.college_id = request.POST.get('college_id', student.college_id)
+        student.department = request.POST.get('department', student.department)
+        student.year_of_study = request.POST.get('year_of_study', student.year_of_study)
+        student.phone_number = request.POST.get('phone_number', student.phone_number)
+        student.address = request.POST.get('address', student.address)
+        student.date_of_birth = request.POST.get('date_of_birth', student.date_of_birth)
+
+        # Handle password change (only if provided)
+        new_password = request.POST.get('password')
+        confirm_password = request.POST.get('confirm_password')
+        if new_password:
+            student.password = make_password(new_password)
+
+        # Handle profile image upload
+        if 'profile_image' in request.FILES:
+            student.profile_image = request.FILES['profile_image']
+
+        student.save()
+        return redirect('profile')  # Redirect back to profile page
+
+    return render(request, 'accounts/profile.html', {'student': student})

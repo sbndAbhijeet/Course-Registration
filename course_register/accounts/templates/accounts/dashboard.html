@@ -53,6 +53,11 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'profile' %}">
+                            <i class="fas fa-user me-2"></i> View Profile
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link text-white" href="{% url 'register_student' %}">
                             <i class="fas fa-book me-2"></i> Register for a Semester
                         </a>
@@ -86,7 +91,7 @@
                         IIIT Vadodara
                     </a>
                     <div class="ms-auto d-flex align-items-center">
-                        <span class="me-3 text-muted">Welcome, {{ request.session.student_email }} 😁</span>
+                        <span class="me-3 text-muted">Welcome, {{ request.session.student_email }} 😁 </span>
                         <a href="{% url 'logout' %}" class="btn btn-danger btn-sm">Logout</a>
                     </div>
                 </div>
@@ -95,27 +100,36 @@
             <!-- Dashboard Content -->
             <div class="container mt-4">
                 <h2 class="mb-4">Dashboard Overview</h2>
-
-                <!-- User Information Card -->
+                
                 <div class="row">
+                    <!-- User Information Card -->
                     <div class="col-md-6">
                         <div class="card shadow-sm mb-4">
-                            <div class="card-body">
-                                <h5 class="card-title">Student Information</h5>
-                                <hr>
-                                <p><strong>Email:</strong> {{ request.session.student_email }}</p>
-                                <p><strong>College ID:</strong> {{ student.college_id }}</p>
-                                {% if registration %}
-                                    <p><strong>Name:</strong> {{ registration.name }}</p>
-                                    <p><strong>Branch:</strong> {{ registration.branch_name }}</p>
-                                    <p><strong>Semester:</strong> {{ registration.semester_applying_for }}</p>
-                                {% else %}
-                                    <p class="text-muted">No registration data available. Please register for a semester.</p>
-                                {% endif %}
+                            <div class="card-body d-flex align-items-center justify-content-between">
+                                <!-- Profile Image -->
+                                <div class="text-center">
+                                
+                                    <img src="{% if student.profile_image %}{{ student.profile_image.url }}{% else %}{% static 'images/default.png' %}{% endif %}" alt="Profile" class="rounded-circle shadow-sm mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+                                </div>
+                
+                                <!-- Student Information -->
+                                <div class="ms-4">
+                                    <h5 class="card-title text-center">Student Information</h5>
+                                    <hr>
+                                    <p><strong>Email:</strong> {{ request.session.student_email }}</p>
+                                    <p><strong>College ID:</strong> {{ student.college_id }}</p>
+                                    {% if registration %}
+                                        <p><strong>Name:</strong> {{ registration.name }}</p>
+                                        <p><strong>Branch:</strong> {{ registration.branch_name }}</p>
+                                        <p><strong>Semester:</strong> {{ registration.semester_applying_for }}</p>
+                                    {% else %}
+                                        <p class="text-muted">No registration data available. Please register for a semester.</p>
+                                    {% endif %}
+                                </div>
                             </div>
                         </div>
                     </div>
-
+                
                     <!-- Quick Actions Card -->
                     <div class="col-md-6">
                         <div class="card shadow-sm mb-4">
@@ -129,6 +143,7 @@
                         </div>
                     </div>
                 </div>
+                
 
                 <!-- Recent Registrations or Enrollments -->
                 {% if registration %}
@@ -152,7 +167,7 @@
             </div>
         </div>
     </div>
-    <!-- Font Awesome for Icons -->
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
 </body>
 
