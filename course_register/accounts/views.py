@@ -1,15 +1,19 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import LoginForm, SignupForm
-from .models import Student
+from .models import Student, Faculty
 from django.contrib.auth.hashers import make_password, check_password
 from django.core.mail import send_mail
 from django.conf import settings
 import random
 from django.contrib import messages
-from course_registration.models import Course, FacultyAdvisor, StudentRegistration
+from course_registration.models import Course, StudentRegistration
 from django.contrib.auth.decorators import login_required
 from .models import Student
 from django.contrib.auth import authenticate, login, logout
+import logging
+
+# Define the logger at the top of the file
+logger = logging.getLogger(__name__)
 
 
 
@@ -23,17 +27,33 @@ def login(request):
         if form.is_valid():
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
+            role = form.cleaned_data['role']
+            logger.info(f"Login attempt with username: {username}, role: {role}")
             try:
                 student = Student.objects.get(email=username)
                 if check_password(password, student.password):
                     # Set session variable to indicate the user is logged in
                     request.session['student_email'] = student.email
+                    request.session['role'] = 'student'
+                    print('role: ', request.session['role'])
+                    
                     messages.success(request, "Logged in successfully!")
                     return redirect('dashboard')
                 else:
                     form.add_error(None, "Invalid credentials.")
             except Student.DoesNotExist:
-                form.add_error(None, "User does not exist.")
+                try:
+                    faculty = Faculty.objects.get(email=username)
+                    if check_password(password, faculty.password):
+                        request.session['faculty_email'] = faculty.email
+                        request.session['role'] = 'faculty'
+                        print('role: ', request.session['role'])
+                        messages.success(request, "Logged in successfully!")
+                        return redirect('faculty_dashboard')
+                    else:
+                        messages.error(request, "Invalid credentials.")
+                except Faculty.DoesNotExist:
+                    messages.error(request, "User does not exist.")
     else:
         form = LoginForm()
     return render(request, 'accounts/login.html', {'form': form})
@@ -100,20 +120,30 @@ def reset_password(request):
 def logout(request):
     if 'student_email' in request.session:
         del request.session['student_email']  # Clear session
+        del request.session['role']
         messages.success(request, "Logged out successfully!")
     return redirect('login')
 
 def signup(request):
+    if request.method == 'GET':
+        # Clear session data only on GET requests
+        if 'signup_data' in request.session:
+            del request.session['signup_data']
+        if 'otp' in request.session:
+            del request.session['otp']
+        if 'signup_role' in request.session:
+            del request.session['signup_role']
+        logger.info(f"Session after clearing (GET): {request.session.items()}")
+
     if request.method == 'POST':
         form = SignupForm(request.POST)
         if form.is_valid():
-            # Save data temporarily in session
             request.session['signup_data'] = form.cleaned_data
-
-            # Generate and send OTP
             otp = random.randint(100000, 999999)
             request.session['otp'] = otp
+            request.session['signup_role'] = form.cleaned_data['role']
             email = form.cleaned_data['email']
+            logger.info(f"Session after setting data: {request.session.items()}")
             send_mail(
                 "OTP Verification",
                 f"Your OTP is {otp}",
@@ -123,22 +153,22 @@ def signup(request):
             )
             return redirect('otp_verification')
         else:
-            # Show form errors if validation fails
+            messages.error(request, "Please correct the errors below.")
             return render(request, 'accounts/signup.html', {'form': form})
     else:
         form = SignupForm()
     return render(request, 'accounts/signup.html', {'form': form})
-
-def dashboard(request):
-    # Check if the user is logged in
-    if not is_authenticated(request):
-        messages.error(request, "You need to log in to access this page.")
-        return redirect('login')
+# def dashboard(request):
+#     # Check if the user is logged in
+#     if not is_authenticated(request):
+#         messages.error(request, "You need to log in to access this page.")
+#         return redirect('login')
     
-    return render(request, 'accounts/dashboard.html')
+#     return render(request, 'accounts/dashboard.html')
 
 def otp_verification(request):
-    # Check if the user is logged in (optional, since this is part of the signup process)
+    logger.info(f"Session at start of otp_verification: {request.session.items()}")
+
     if request.method == 'POST':
         user_otp = request.POST.get('otp')
         stored_otp = request.session.get('otp')
@@ -183,13 +213,14 @@ def all_courses(request):
 
 
 def contact_us(request):
-    faculty_advisors = FacultyAdvisor.objects.all()
+    faculty_advisors = Faculty.objects.all()
     print("Faculty Advisors fetched:", list(faculty_advisors))  # Debug
     return render(request, 'accounts/contact_us.html', {'faculty_advisors': faculty_advisors})
 
 @login_required
 def dashboard(request):
     student_email = request.session.get("student_email")
+    print('role: ', request.session['role'])
     if not student_email:
         return redirect('login')
     
@@ -200,6 +231,41 @@ def dashboard(request):
         'student': student,
         'registration': registration,
     })
+
+@login_required
+def faculty_dashboard(request):
+    faculty_email = request.session.get('faculty_email')
+    print('role: ', request.session['role'])
+    if not faculty_email:
+        messages.error(request, "User session expired. Please log in again.")
+        return redirect('login')
+    
+    faculty = get_object_or_404(Faculty, email=faculty_email)
+    registrations = StudentRegistration.objects.filter(faculty=faculty)
+
+    return render(request, 'accounts/faculty_dashboard.html', {
+        'faculty': faculty,
+        'registrations': registrations,
+    })
+
+@login_required
+def registration_details(request, registration_id):
+    faculty_email = request.session.get('faculty_email')
+    print('role: ', request.session['role'])
+    if not faculty_email:
+        messages.error(request, "User session expired. Please log in again.")
+        return redirect('login')
+    
+    faculty = get_object_or_404(Faculty, email=faculty_email)
+    # Fetch the specific registration
+    registration = get_object_or_404(StudentRegistration, id=registration_id)
+
+    # Ensure the registration is assigned to this faculty
+    if registration.faculty != faculty:
+        messages.error(request, "You are not authorized to view this registration.")
+        return redirect('faculty_dashboard')
+
+    return render(request, 'accounts/registration_details.html', {'registration': registration, 'faculty': faculty})
 
 @login_required
 def profile(request):
@@ -233,3 +299,40 @@ def profile(request):
         return redirect('profile')  # Redirect back to profile page
 
     return render(request, 'accounts/profile.html', {'student': student})
+
+
+# Implement the Status Update Logic
+# We need to create a new view to handle the status update, add a URL pattern for it, and ensure the change is reflected on both dashboards.
+
+def update_registration_status(request, registration_id):
+    email = request.session.get('faculty_email')
+    print('role: ', request.session['role'])
+    if not email:
+        messages.error(request, "User session expired. Please log in again.")
+        return redirect('login')
+    
+    try:
+        faculty = Faculty.objects.get(email=email)
+    except Faculty.DoesNotExist:
+        messages.error(request, "Faculty profile not found.")
+        return redirect('login')
+    
+    registration = get_object_or_404(StudentRegistration, id=registration_id)
+
+    # Ensure the registration is assigned to this faculty
+    if registration.faculty != faculty:
+        messages.error(request, "You are not authorized to update this registration.")
+        return redirect('faculty_dashboard')
+    
+    if request.method == 'POST':
+        new_status = request.POST.get('status')
+        message = request.POST.get('message')
+        if new_status in ['In Progress', 'Issues', 'Rejected', 'Accepted']:
+            registration.status = new_status
+            registration.message = message
+            registration.save()
+            messages.success(request, f"Status updated to '{new_status}' for {registration.student.student_name}.")
+        else:
+            messages.error(request, "Invalid status selected.")
+
+    return redirect('registration_details', registration_id=registration_id)

@@ -222,11 +222,91 @@
                         <!-- Faculty Advisors Section -->
                         <h3 class="text-center mt-5 mb-4">Our Faculty Advisors</h3>
                         <div class="row">
+                            <div class="col-md-6">
+                                <div class="advisor-card">
+                                    <div>
+                                        <h6>Dr. Vivek M. Vyas</h6>
+                                        <p><i class="fas fa-envelope"></i> <a href="mailto:vivek.vyas@iiitvadodara.ac.in" style="color: #007bff; text-decoration: none;">vivek.vyas@iiitvadodara.ac.in</a></p>
+                                        <p><i class="fas fa-graduation-cap"></i> Batch: 2021-22 (Section A)</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="advisor-card">
+                                    <div>
+                                        <h6>Dr. Barnali Chetia</h6>
+                                        <p><i class="fas fa-envelope"></i> <a href="mailto:barnali@iiitvadodara.ac.in" style="color: #007bff; text-decoration: none;">barnali@iiitvadodara.ac.in</a></p>
+                                        <p><i class="fas fa-graduation-cap"></i> Batch: 2021-22 (Section B)</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="advisor-card">
+                                    <div>
+                                        <h6>Dr. Naveen Kumar</h6>
+                                        <p><i class="fas fa-envelope"></i> <a href="mailto:naveen_kumar@iiitvadodara.ac.in" style="color: #007bff; text-decoration: none;">naveen_kumar@iiitvadodara.ac.in</a></p>
+                                        <p><i class="fas fa-graduation-cap"></i> Batch: 2022-23 (Section A)</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="advisor-card">
+                                    <div>
+                                        <h6>Dr. Sunandita Debnath</h6>
+                                        <p><i class="fas fa-envelope"></i> <a href="mailto:sunandita_debnath@iiitvadodara.ac.in" style="color: #007bff; text-decoration: none;">sunandita_debnath@iiitvadodara.ac.in</a></p>
+                                        <p><i class="fas fa-graduation-cap"></i> Batch: 2022-23 (Section B)</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="advisor-card">
+                                    <div>
+                                        <h6>Dr. Kamal Kishor Jha</h6>
+                                        <p><i class="fas fa-envelope"></i> <a href="mailto:kamal@iiitvadodara.ac.in" style="color: #007bff; text-decoration: none;">kamal@iiitvadodara.ac.in</a></p>
+                                        <p><i class="fas fa-graduation-cap"></i> Batch: 2023-24 (Section A)</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="advisor-card">
+                                    <div>
+                                        <h6>Dr. Bhupendra Kumar</h6>
+                                        <p><i class="fas fa-envelope"></i> <a href="mailto:bhupendra_kumar@iiitvadodara.ac.in" style="color: #007bff; text-decoration: none;">bhupendra_kumar@iiitvadodara.ac.in</a></p>
+                                        <p><i class="fas fa-graduation-cap"></i> Batch: 2023-24 (Section B)</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="advisor-card">
+                                    <div>
+                                        <h6>Dr. Swapnil Lokhande</h6>
+                                        <p><i class="fas fa-envelope"></i> <a href="mailto:swapnil@iiitvadodara.ac.in" style="color: #007bff; text-decoration: none;">swapnil@iiitvadodara.ac.in</a></p>
+                                        <p><i class="fas fa-graduation-cap"></i> Batch: 2024-25 (Section A)</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="advisor-card">
+                                    <div>
+                                        <h6>Dr. Ravi Nahta</h6>
+                                        <p><i class="fas fa-envelope"></i> <a href="mailto:ravi_nahta@iiitvadodara.ac.in" style="color: #007bff; text-decoration: none;">ravi_nahta@iiitvadodara.ac.in</a></p>
+                                        <p><i class="fas fa-graduation-cap"></i> Batch: 2024-25 (Section B)</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
                             {% for advisor in faculty_advisors %}
                                 <div class="col-md-6">
                                     <div class="advisor-card">
                                         <!-- Placeholder image (replace with advisor.image if available) -->
-                                        {% comment %} <img src="https://via.placeholder.com/60" alt="{{ advisor.name }}" /> {% endcomment %}
+                                        <img src="https://via.placeholder.com/60" alt="{{ advisor.name }}" />
                                         <div>
                                             <h6>{{ advisor.name }}</h6>
                                             <p><i class="fas fa-envelope"></i> <a href="mailto:{{ advisor.email }}" style="color: #007bff; text-decoration: none;">{{ advisor.email }}</a></p>

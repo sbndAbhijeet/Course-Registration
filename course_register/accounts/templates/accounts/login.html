@@ -174,7 +174,7 @@
             </header>
 
             <!-- Login Form -->
-            <div class="d-flex justify-content-center align-items-center vh-100">
+            <div class="d-flex justify-content-center align-items-center vh-100 mt-3">
                 <div class="card p-4 shadow-lg" style="max-width: 400px; width: 100%; border-radius: 12px; backdrop-filter: blur(10px); background: rgba(255, 255, 255, 0.7);">
                     <div class="card-header text-center">
                         <div class="rounded-circle bg-primary text-white d-flex justify-content-center align-items-center mb-3" style="width: 100px; height: 100px; margin: 0 auto;">
@@ -184,23 +184,58 @@
                         <h4 class="mb-4">Login</h4>
                     </div>
                     <div class="card-body">
-                        {% comment %} {% if messages %}
+                        {% if messages %}
                             {% for message in messages %}
                                 <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
                                     {{ message }}
                                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                                 </div>
                             {% endfor %}
-                        {% endif %} {% endcomment %}
+                        {% endif %}
 
-                        <form method="post" id="loginForm">
+                        <p class="text-muted mb-3">
+                            <strong>Note:</strong> Students, use your student email (e.g., 202351127@iiitvadodara.ac.in). Faculty, use your faculty email (e.g., name@gmail.com).
+                        </p>
+
+                        <form method="post">
+                            {% csrf_token %}
+                            <div class="mb-3">
+                                <label class="form-label">Select Role</label>
+                                <select name="role" class="form-select">
+                                    <option value="">Select Role</option>
+                                    <option value="student">Student</option>
+                                    <option value="faculty">Faculty</option>
+                                </select>
+                                {% if form.role.errors %}
+                                    <div class="text-danger">{{ form.role.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Email</label>
+                                <input type="email" name="username" value="{{ form.username.value|default_if_none:'' }}" class="form-control" required>
+                                {% if form.username.errors %}
+                                    <div class="text-danger">{{ form.username.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Password</label>
+                                <input type="password" name="password" class="form-control" required>
+                                {% if form.password.errors %}
+                                    <div class="text-danger">{{ form.password.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <button type="submit" class="btn btn-primary w-100"><span class="spinner-border spinner-border-sm d-none" id="spinner" role="status" aria-hidden="true"></span>Login</button>
+                        </form>
+
+                 {% comment %} Post form before adding faculty {% endcomment %}
+                        {% comment %} <form method="post" id="loginForm">
                             {% csrf_token %}
                             {{ form.as_p }}
                             <button type="submit" class="btn btn-primary w-100" id="loginButton">
                                 <span class="spinner-border spinner-border-sm d-none" id="spinner" role="status" aria-hidden="true"></span>
                                 Login
                             </button>
-                        </form>
+                        </form> {% endcomment %}
 
                         <p class="text-center mt-3">Don't have an account? <a href="{% url 'signup' %}">Sign Up</a></p>
                         <p class="text-center mt-2"><a class="text-decoration-none  text-red" href="{% url 'forgot_password' %}">Forgot Password?</a></p>

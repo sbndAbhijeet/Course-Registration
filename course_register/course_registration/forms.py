@@ -1,5 +1,5 @@
 from django import forms
-from .models import StudentRegistration, Course, FacultyAdvisor
+from .models import StudentRegistration, Course, Faculty
 
 class StudentRegistrationForm(forms.ModelForm):
     selected_courses = forms.ModelMultipleChoiceField(
@@ -8,10 +8,11 @@ class StudentRegistrationForm(forms.ModelForm):
         required=False
     )
     
-    faculty = forms.ModelChoiceField(
-        queryset=FacultyAdvisor.objects.all(),
-        empty_label = 'Select Faculty Advisor',
-        required = True
+    faculty = forms.ModelChoiceField(queryset=Faculty.objects.all(), empty_label="Select Faculty Advisor")
+    selected_courses = forms.ModelMultipleChoiceField(
+        queryset=Course.objects.all(),
+        widget=forms.CheckboxSelectMultiple,
+        required=True
     )
 
     class Meta:
@@ -27,5 +28,6 @@ class StudentRegistrationForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['faculty'].widget.attrs.update({'class': 'form-control'})
         for field in self.fields:
             self.fields[field].widget.attrs.update({'class': 'form-control'})

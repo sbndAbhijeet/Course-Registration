@@ -26,3 +26,19 @@ class Student(models.Model):
 
     def __str__(self):
         return self.student_name
+
+class Faculty(models.Model):
+    email = models.EmailField(primary_key=True, unique=True)
+    name = models.CharField(max_length=255)  # Moved from FacultyAdvisor
+    gender = models.CharField(max_length=10)
+    department = models.CharField(max_length=100)  # Moved from FacultyAdvisor
+    password = models.CharField(max_length=255)
+    phone_number = models.CharField(max_length=15, null=True, blank=True)
+    academic_batch = models.CharField(max_length=50, blank=True, null=True)
+    date_of_birth = models.DateField(null=True, blank=True)
+    address = models.TextField(null=True, blank=True)
+    profile_image = models.ImageField(upload_to='faculty_images/', default='{% static "images/default.png" %}', null=True, blank=True)
+    date_joined = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name

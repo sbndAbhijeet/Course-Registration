@@ -36,6 +36,21 @@
             font-size: 1.25rem;
             font-weight: 600;
         }
+        .status-icon {
+            margin-right: 5px;
+        }
+        .status-in-progress .status-icon {
+            color: yellow;
+        }
+        .status-issues .status-icon {
+            color: orange;
+        }
+        .status-rejected .status-icon {
+            color: red;
+        }
+        .status-accepted .status-icon {
+            color: green;
+        }
     </style>
 
 </head>
@@ -153,6 +168,23 @@
                             <hr>
                             <p><strong>Semester:</strong> {{ registration.semester_applying_for }}</p>
                             <p><strong>Faculty Advisor:</strong> {{ registration.faculty.name }}</p>
+                            <p><strong>Status:</strong>
+                                <span class="status-{{ registration.status|lower|slugify }}">
+                                    {% if registration.status == 'In Progress' %}
+                                        <i class="fas fa-circle status-icon"></i>
+                                    {% elif registration.status == 'Issues' %}
+                                        <i class="fas fa-exclamation-circle status-icon"></i>
+                                    {% elif registration.status == 'Rejected' %}
+                                        <i class="fas fa-times-circle status-icon"></i>
+                                    {% elif registration.status == 'Accepted' %}
+                                        <i class="fas fa-check-circle status-icon"></i>
+                                    {% endif %}
+                                    {{ registration.status }}
+                                </span>
+                            </p>
+                            {% if registration.message %}
+                                <p>👉<strong style="color:rgb(213, 60, 0);">Message from Faculty:</strong> {{ registration.message }}</p>
+                            {% endif %}
                             <p><strong>Selected Courses:</strong></p>
                             <ul>
                                 {% for course in registration.selected_courses.all %}
@@ -169,6 +201,7 @@
     </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
 </body>
 
 

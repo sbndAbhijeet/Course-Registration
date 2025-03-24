@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Course, FacultyAdvisor, StudentRegistration, Enrolled
+from .models import Course, StudentRegistration, Enrolled
 
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
@@ -7,11 +7,7 @@ class CourseAdmin(admin.ModelAdmin):
     list_filter = ('semester', 'branch_name')
     search_fields = ('course_code', 'name')
 
-@admin.register(FacultyAdvisor)
-class FacultyAdvisorAdmin(admin.ModelAdmin):
-    list_display = ('faculty_id', 'name', 'email', 'academic_batch')
-    
-    search_fields = ('name', 'email')
+
 
 @admin.register(StudentRegistration)
 class StudentRegistrationAdmin(admin.ModelAdmin):
@@ -21,9 +17,14 @@ class StudentRegistrationAdmin(admin.ModelAdmin):
 
 @admin.register(Enrolled)
 class EnrolledAdmin(admin.ModelAdmin):
-    list_display = ('get_student_email', 'college_id', 'faculty')  # Use a custom method
+    list_display = ['student_name', 'get_college_id', 'faculty']  # Use a method to get college_id
     filter_horizontal = ('selected_courses',)
 
-    def get_student_email(self, obj):
-        return obj.student.email
-    get_student_email.short_description = 'Student Email'
+
+    def student_name(self, obj):
+        return obj.student.student_name
+    student_name.short_description = 'Student Name'  # Set a readable name for the column
+
+    def get_college_id(self, obj):
+        return obj.student.college_id
+    get_college_id.short_description = 'College ID'  # Set a readable name for the column

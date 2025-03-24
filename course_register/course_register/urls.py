@@ -27,6 +27,6 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),  # Include accounts URLs
     path("course_registration/", include("course_registration.urls")),
 ] + static(settings.MEDIA_URL, document_root = settings.MEDIA_ROOT)
-from django.urls import path
+
 
 

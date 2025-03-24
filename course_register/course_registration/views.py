@@ -1,8 +1,8 @@
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import StudentRegistrationForm
-from .models import Course, StudentRegistration, Enrolled, Course, FacultyAdvisor
-from accounts.models import Student
+from .models import Course, StudentRegistration, Enrolled, Course
+from accounts.models import Student, Faculty
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -69,7 +69,7 @@ def register_student(request):
 
     # print("Logged in user:", request.user.email)  # Debugging (sbndabhijeet@gmail.com)
     # print("Logged in user:", student_email)  # Debugging (202351127@iiitvadodara.ac.in)
-    faculty_advisors = FacultyAdvisor.objects.all()
+    faculty_advisors = Faculty.objects.all()
     print("Faculty Advisors:", list(faculty_advisors))  # Debug: Check if data exists
     return render(request, "course_registration/register.html", {"form": form})
 
