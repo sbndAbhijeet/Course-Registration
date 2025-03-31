@@ -1,0 +1,188 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Class Schedule - IIIT Vadodara</title>
+    <link rel="icon" href="{% static 'images/icon.png' %}">
+    
+    <!-- Bootstrap 5 for better styling -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            background-color: #f0f4f8;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            background-color: #1a3c6d;
+            min-height: 100vh;
+            padding-top: 20px;
+            position: fixed;
+            transition: width 0.3s ease-in-out;
+        }
+
+        .sidebar h4 {
+            color: white;
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .sidebar .nav-link {
+            color: white;
+            padding: 12px 20px;
+            display: block;
+            transition: background 0.3s ease-in-out;
+            font-size: 1rem;
+        }
+
+        .sidebar .nav-link i {
+            margin-right: 10px;
+        }
+
+        .sidebar .nav-link:hover {
+            background-color: #4a90e2;
+            text-decoration: none;
+        }
+
+        .sidebar .active {
+            background-color: #0056b3;
+            font-weight: bold;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
+            flex-grow: 1;
+            {% comment %} padding: 20px; {% endcomment %}
+            transition: margin-left 0.3s ease-in-out;
+            width: 100%;
+        }
+
+        /* Title */
+        h2 {
+            color: #1a3c6d;
+            text-align: center;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 20px;
+        }
+
+        /* Embedded Google Sheet */
+        iframe {
+            width: 1270px;
+            height: 600px;
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Responsive Sidebar */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 60px;
+            }
+            .sidebar h4 {
+                display: none;
+            }
+            .sidebar .nav-link {
+                text-align: center;
+                padding: 10px;
+                font-size: 0.85rem;
+            }
+            .sidebar .nav-link i {
+                margin-right: 0;
+                font-size: 1.2rem;
+            }
+            .main-content {
+                margin-left: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <div class="bg-dark text-white sidebar" style="width: 250px; min-height: 100vh; position: fixed;">
+            <div class="p-4">
+                <h4 class="text-center">Course Registration</h4>
+                <hr class="bg-light">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'dashboard' %}">
+                            <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white active" href="{% url 'class_schedule' %}">
+                            <i class="fas fa-tachometer-alt me-2"></i> Class Schedule
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'profile' %}">
+                            <i class="fas fa-user me-2"></i> View Profile
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'register_student' %}">
+                            <i class="fas fa-book me-2"></i> Register for a Semester
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'all_courses' %}">
+                            <i class="fas fa-list me-2"></i> View All Courses
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'contact_us' %}">
+                            <i class="fas fa-address-book me-2"></i> Contact Us
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'logout' %}">
+                            <i class="fas fa-sign-out-alt me-2"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Navbar -->
+            <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="{% url 'dashboard' %}">
+                        <img src="{% static 'images/institute1.png' %}" alt="Institute Logo" style="height: 40px;">
+                        IIIT Vadodara
+                    </a>
+                    <div class="ms-auto d-flex align-items-center">
+                        <span class="me-3 text-muted">Welcome, {{ request.session.student_email }} 😁 </span>
+                        <a href="{% url 'logout' %}" class="btn btn-danger btn-sm">Logout</a>
+                    </div>
+                </div>
+            </nav>
+
+            <h2 class="mt-4">Class Schedule</h2>
+            <a href="{% url 'view_excel' %}" class="btn btn-primary w-20 mb-2">
+                <i class="fas fa-download me-2"></i> Download Class Schedule
+            </a>
+            
+            <iframe src="https://docs.google.com/spreadsheets/d/1FXk-6rymwFIgA8BXZ5mveGHEjCyjbeIog4N5rOuFcLI/edit?gid=759435161#gid=759435161"></iframe>
+        </div>
+
+</body>
+</html>

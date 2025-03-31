@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
+import datetime
 from .forms import LoginForm, SignupForm
-from .models import Student, Faculty
+from .models import Student, Faculty,MessSchedule,BusSchedule
 from django.contrib.auth.hashers import make_password, check_password
 from django.core.mail import send_mail
 from django.conf import settings
@@ -11,7 +12,8 @@ from django.contrib.auth.decorators import login_required
 from .models import Student
 from django.contrib.auth import authenticate, login, logout
 import logging
-
+from course_registration.models import StudentRegistration, Enrolled
+import os
 # Define the logger at the top of the file
 logger = logging.getLogger(__name__)
 
@@ -172,38 +174,53 @@ def otp_verification(request):
     if request.method == 'POST':
         user_otp = request.POST.get('otp')
         stored_otp = request.session.get('otp')
-        email = request.session.get('email_for_reset')
 
-        if not email:
-            messages.error(request, 'Session expired. Please try again.')
+        # Check if OTP exists in session
+        if not stored_otp:
+            messages.error(request, 'Session expired or OTP not found. Please try again.')
             return redirect('login')
-        
-        if user_otp == stored_otp:
-            if 'email_for_reset' in request.session:
-                #otp verified for password reset
-                return redirect('reset_password')
-        
-            else:
-                # OTP verified for signup (existing logic)
-                if str(user_otp) == str(stored_otp):
-                    # Save data to database
-                    signup_data = request.session.get('signup_data')
-                    form = SignupForm(signup_data)
-                    if form.is_valid():
-                        form.save()
-                        messages.success(request, "Account created! Please login.")
-                        del request.session['signup_data']
-                        del request.session['otp']
-                        return redirect('login')
-                    else:
-                        messages.error(request, "Error saving data. Please try again.")
-                else:
-                    messages.error(request, "Invalid OTP!")
-                    return redirect('signup')
-        else:
+
+        # Check if the OTP matches
+        if str(user_otp) != str(stored_otp):
             messages.error(request, 'Invalid OTP. Please try again.')
             return redirect('otp_verification')
-    
+
+        # Determine the flow: Forgot Password or Signup
+        if 'email_for_reset' in request.session:
+            # Forgot Password flow
+            email = request.session.get('email_for_reset')
+            if not email:
+                messages.error(request, 'Session expired. Please try again.')
+                return redirect('login')
+            logger.info(f"OTP verified for password reset for email: {email}")
+            return redirect('reset_password')
+        else:
+            # Signup flow
+            signup_data = request.session.get('signup_data')
+            if not signup_data:
+                messages.error(request, 'Session expired or signup data not found. Please try again.')
+                return redirect('signup')
+
+            email = signup_data.get('email')
+            if not email:
+                messages.error(request, 'Email not found in signup data. Please try again.')
+                return redirect('signup')
+
+            # Save the user to the database
+            form = SignupForm(signup_data)
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Account created successfully! Please login.")
+                # Clean up session
+                del request.session['signup_data']
+                del request.session['otp']
+                logger.info(f"Account created for email: {email}")
+                return redirect('login')
+            else:
+                messages.error(request, "Error saving data. Please try again.")
+                logger.error(f"Form errors during signup: {form.errors}")
+                return redirect('signup')
+
     return render(request, 'accounts/otp_verification.html')
 
 def all_courses(request):
@@ -225,12 +242,16 @@ def dashboard(request):
         return redirect('login')
     
     student = get_object_or_404(Student, email=student_email)
+
+    # Fetch the most recent submitted registration
     registration = StudentRegistration.objects.filter(student=student).first()
     
     return render(request, 'accounts/dashboard.html', {
         'student': student,
         'registration': registration,
     })
+
+
 
 @login_required
 def faculty_dashboard(request):
@@ -336,3 +357,54 @@ def update_registration_status(request, registration_id):
             messages.error(request, "Invalid status selected.")
 
     return redirect('registration_details', registration_id=registration_id)
+
+
+def class_schedule(request):
+    return render(request, 'accounts/class_schedule.html')
+
+def bus_schedule(request):
+    return render(request, 'accounts/bus_schedule.html')
+
+def mess_schedule(request):
+    email = request.session.get('student_email')
+    if not email:
+        messages.error(request, "User session expired. Please log in again.")
+        return redirect('login')
+
+    # Fetch the mess schedule, ordered by ID to maintain Monday to Sunday order
+    schedules = MessSchedule.objects.all().order_by('id')
+
+    return render(request, 'accounts/mess_schedule.html', {
+        'schedules': schedules,
+        'request': request,
+    })
+
+def bus_schedule(request):
+    
+    email = request.session.get('student_email')
+    if not email:
+        messages.error(request, "User session expired. Please log in again.")
+        return redirect('login')
+
+    # Fetch bus schedules and group by day
+    schedules = BusSchedule.objects.all()
+    # current_day = datetime.now().strftime('%A')
+
+    # Group schedules by day for the template
+    days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']
+    schedules_by_day = {day: [] for day in days}
+    for schedule in schedules:
+        if schedule.day in days:
+            schedules_by_day[schedule.day].append(schedule)
+
+    return render(request, 'accounts/bus_schedule.html', {
+        'schedules_by_day': schedules_by_day,
+        # 'current_day': current_day,
+    })
+
+def view_excel_file(request):
+    excel_path = os.path.join(settings.MEDIA_URL, '2024-25_academic_planning.xlsx')
+    return redirect(excel_path)
+
+def class_schedule_view(request):
+    return render(request, "class_schedule.html")

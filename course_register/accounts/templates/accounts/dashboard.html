@@ -51,6 +51,99 @@
         .status-accepted .status-icon {
             color: green;
         }
+        /* Custom button styles */
+    .btn-register {
+        background-color: #0056b3; /* Deep blue */
+        border-color: #0056b3;
+        color: #ffffff;
+        transition: background-color 0.3s ease;
+    }
+    .btn-register:hover {
+        background-color: #003f8a; /* Slightly darker deep blue */
+        border-color: #003f8a;
+        color: #ffffff;
+    }
+
+    .btn-courses {
+        background-color: #4a90e2; /* Softer blue */
+        border-color: #4a90e2;
+        color: #ffffff;
+        transition: background-color 0.3s ease;
+    }
+    .btn-courses:hover {
+        background-color: #357abd; /* Slightly darker softer blue */
+        border-color: #357abd;
+        color: #ffffff;
+    }
+
+    .btn-contact {
+        background-color: #17a2b8; /* Muted teal */
+        border-color: #17a2b8;
+        color: #ffffff;
+        transition: background-color 0.3s ease;
+    }
+    .btn-contact:hover {
+        background-color: #117a8b; /* Slightly darker muted teal */
+        border-color: #117a8b;
+        color: #ffffff;
+    }
+
+    .btn-class-schedule {
+        background-color: #2e7d32; /* Deep green */
+        border-color: #2e7d32;
+        color: #ffffff;
+        transition: background-color 0.3s ease;
+    }
+    .btn-class-schedule:hover {
+        background-color: #205b23; /* Slightly darker deep green */
+        border-color: #205b23;
+        color: #ffffff;
+    }
+
+    .btn-bus-schedule {
+        background-color: #3949ab; /* Indigo */
+        border-color: #3949ab;
+        color: #ffffff;
+        transition: background-color 0.3s ease;
+    }
+    .btn-bus-schedule:hover {
+        background-color: #2a388f; /* Slightly darker indigo */
+        border-color: #2a388f;
+        color: #ffffff;
+    }
+
+    .btn-mess-schedule {
+        background-color: #d84315; /* Deep orange */
+        border-color: #d84315;
+        color: #ffffff;
+        transition: background-color 0.3s ease;
+    }
+    .btn-mess-schedule:hover {
+        background-color: #b03611; /* Slightly darker deep orange */
+        border-color: #b03611;
+        color: #ffffff;
+    }
+
+    /* Ensure buttons have consistent styling */
+    .btn {
+        font-weight: 500;
+        padding: 7px;
+        border-radius: 5px;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .btn {
+            font-size: 0.9rem;
+            padding: 8px;
+        }
+    }
+    @media (max-width: 576px) {
+        .btn {
+            font-size: 0.85rem;
+            padding: 6px;
+        }
+    }
     </style>
 
 </head>
@@ -151,13 +244,17 @@
                             <div class="card-body">
                                 <h5 class="card-title">Quick Actions</h5>
                                 <hr>
-                                <a href="{% url 'register_student' %}" class="btn btn-primary w-100 mb-2">Register for a Semester</a>
-                                <a href="{% url 'all_courses' %}" class="btn btn-info w-100 mb-2">View All Courses</a>
-                                <a href="{% url 'contact_us' %}" class="btn btn-secondary w-100">Contact Us</a>
+                                <a href="{% url 'register_student' %}" class="btn btn-register w-100 mb-2"><i class="fas fa-user-plus me-2"></i>  Register/Edit for a Semester</a>
+                                <a href="{% url 'all_courses' %}" class="btn btn-courses w-100 mb-2"><i class="fas fa-book me-2"></i>  View All Courses</a>
+                                <a href="{% url 'contact_us' %}" class="btn btn-contact w-100 mb-2"> <i class="fas fa-envelope me-2"></i>  Contact Us</a>
+                                <a href="{% url 'class_schedule' %}" class="btn btn-class-schedule w-100 mb-2"> <i class="fas fa-calendar-alt me-2"></i> View Class Schedule</a>
+                                <a href="{% url 'bus_schedule' %}" class="btn btn-bus-schedule w-100 mb-2"><i class="fas fa-bus me-2"></i> View Bus Schedule</a>
+                                <a href="{% url 'mess_schedule' %}" class="btn btn-mess-schedule w-100"><i class="fas fa-utensils me-2"></i>  View Mess Schedule</a>
                             </div>
                         </div>
                     </div>
                 </div>
+                    
                 
 
                 <!-- Recent Registrations or Enrollments -->

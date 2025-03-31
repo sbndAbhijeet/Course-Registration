@@ -50,6 +50,7 @@ class StudentRegistration(models.Model):
     status = models.CharField(max_length=50, choices=STATUS_CHOICES, default='In Progress')  # Updated status field
     message = models.TextField(max_length=500, blank=True, null=True, help_text="Message from faculty regarding the registration status.")
 
+
     def __str__(self):
         return f"{self.name} - Semester {self.semester_applying_for}"
 
