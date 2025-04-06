@@ -173,6 +173,17 @@
             padding: 5px;
             font-size: 0.9rem;
         }
+        .analytics-box {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+        }
+        .analytics-box .badge {
+            font-size: 1rem;
+            padding: 8px 12px;
+        }
     </style>
 </head>
 <body>
@@ -253,6 +264,28 @@
                         <h4>Welcome, {{ faculty.name }}</h4>
                         <p><strong>Email:</strong> {{ faculty.email }}</p>
                         <p><strong>Department:</strong> {{ faculty.department }}</p>
+
+                        <!-- Analytics Section -->
+                        <div class="analytics-box">
+                            <h5>Registration Analytics</h5>
+                            <div class="row text-center">
+                                <div class="col-md-3">
+                                    <span class="badge bg-warning text-dark">In Progress: {{ status_counts.InProgress }}</span>
+                                </div>
+                                <div class="col-md-3">
+                                    <span class="badge bg-danger">Issues: {{ status_counts.Issues }}</span>
+                                </div>
+                                <div class="col-md-3">
+                                    <span class="badge bg-danger">Rejected: {{ status_counts.Rejected }}</span>
+                                </div>
+                                <div class="col-md-3">
+                                    <span class="badge bg-success">Accepted: {{ status_counts.Accepted }}</span>
+                                </div>
+                            </div>
+                            <div class="text-center mt-3">
+                                <span class="badge bg-primary">Total: {{ status_counts.Total }}</span>
+                            </div>
+                        </div>
 
                         <h5 class="mt-4">Student Registrations</h5>
                         {% if registrations %}

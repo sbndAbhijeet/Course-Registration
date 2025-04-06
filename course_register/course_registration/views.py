@@ -7,6 +7,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
 from django.contrib.auth import logout
+from django.core.mail import send_mail
+from django.conf import settings
 
 @login_required
 def register_student(request):
@@ -57,12 +59,11 @@ def register_student(request):
                 print("Error saving Enrolled:", str(e))
 
             messages.success(request, "Registration submitted successfully.")
-            return redirect("registration_success")
+            return redirect("registration_success", registration_id=registration.id)
         else:
             print("Form errors:", form.errors)
-
-            messages.success(request, "Registration submitted successfully.")
-            return redirect("registration_success")
+            messages.error(request, "Please correct the errors below.")
+            return render(request, "course_registration/register.html", {"form": form})
 
     else:
         form = StudentRegistrationForm(instance=registration)
@@ -74,8 +75,53 @@ def register_student(request):
     return render(request, "course_registration/register.html", {"form": form})
 
 @login_required
-def registration_success(request):
-    return render(request, "course_registration/success.html")
+def registration_success(request, registration_id):
+    print("Session user_type:", request.session.get('user_type'))
+    email = request.session.get('student_email')
+    try:
+        student = Student.objects.get(email=email)
+    except Student.DoesNotExist:    
+        messages.error(request, "Student profile not found.")
+        return redirect('login')
+    
+    registration = get_object_or_404(StudentRegistration, id=registration_id, student=student)
+    
+    faculty = registration.faculty
+    # Send email to the student
+    subject = "Registration Submitted Successfully"
+    email_message = (
+        f"Dear {registration.student.student_name},\n\n"
+        f"Your registration for Semester {registration.semester_applying_for} has been submitted successfully.\n"
+        f"It has been assigned to your faculty advisor, {faculty.name}, for review.\n\n"
+        f"Please check your dashboard for updates.\n\n"
+        f"Regards,\nIIIT Vadodara"
+    )
+    send_mail(
+        subject=subject,
+        message=email_message,
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        recipient_list=[registration.student.email],
+        fail_silently=False,
+    )
+
+    # Send email to the faculty
+    subject_faculty = "New Registration Assigned for Review"
+    email_message_faculty = (
+        f"Dear {faculty.name},\n\n"
+        f"A new registration from {registration.student.student_name} (Semester {registration.semester_applying_for}) has been assigned to you for review.\n\n"
+        f"Please check your dashboard for details.\n\n"
+        f"Regards,\nIIIT Vadodara"
+    )
+    send_mail(
+        subject=subject_faculty,
+        message=email_message_faculty,
+        from_email=settings.DEFAULT_FROM_EMAIL,
+        recipient_list=[faculty.email],
+        fail_silently=False,
+    )
+
+
+    return render(request, "course_registration/success.html", {"registration": registration})
 
 def get_courses(request):
     # This view does not require authentication since it's used for AJAX requests

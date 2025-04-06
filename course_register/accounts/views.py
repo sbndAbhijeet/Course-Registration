@@ -264,9 +264,19 @@ def faculty_dashboard(request):
     faculty = get_object_or_404(Faculty, email=faculty_email)
     registrations = StudentRegistration.objects.filter(faculty=faculty)
 
+    # Calculate status counts
+    status_counts = {
+        'In Progress': registrations.filter(status='InProgress').count(),
+        'Issues': registrations.filter(status='Issues').count(),
+        'Rejected': registrations.filter(status='Rejected').count(),
+        'Accepted': registrations.filter(status='Accepted').count(),
+        'Total': registrations.count(),
+    }
+
     return render(request, 'accounts/faculty_dashboard.html', {
         'faculty': faculty,
         'registrations': registrations,
+        'status_counts': status_counts,
     })
 
 @login_required
@@ -345,6 +355,7 @@ def update_registration_status(request, registration_id):
         messages.error(request, "You are not authorized to update this registration.")
         return redirect('faculty_dashboard')
     
+    
     if request.method == 'POST':
         new_status = request.POST.get('status')
         message = request.POST.get('message')
@@ -353,8 +364,26 @@ def update_registration_status(request, registration_id):
             registration.message = message
             registration.save()
             messages.success(request, f"Status updated to '{new_status}' for {registration.student.student_name}.")
+
+            # Send email notification to the student
+            subject = f"Registration Status Updated - {new_status}"
+            email_message = (
+                f"Dear {registration.student.student_name},\n\n"
+                f"Your registration status for Semester {registration.semester_applying_for} has been updated from to '{new_status}'.\n"
+                f"Message from Faculty: {message if message else 'No additional message provided.'}\n\n"
+                f"Please check your dashboard for details.\n\n"
+                f"Regards,\nIIIT Vadodara"
+            )
+            send_mail(
+                subject=subject,
+                message=email_message,
+                from_email=settings.DEFAULT_FROM_EMAIL,
+                recipient_list=[registration.student.email],
+                fail_silently=False,
+            )
         else:
             messages.error(request, "Invalid status selected.")
+
 
     return redirect('registration_details', registration_id=registration_id)
 

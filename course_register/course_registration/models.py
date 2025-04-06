@@ -43,6 +43,7 @@ class StudentRegistration(models.Model):
     selected_courses = models.ManyToManyField(Course)  # ✅ Fix
     # program_electives = models.TextField(help_text="Comma-separated list of program electives", blank=True, null=True)
     # open_electives = models.TextField(help_text="Comma-separated list of open electives", blank=True, null=True)
+    grade_sheet = models.FileField(upload_to="fee_documents/", blank=True, null=True, help_text="Upload your grade sheet (PDF format recommended).")  # New field
     college_fee_proof = models.FileField(upload_to="fee_documents/")
     hostel_fee_proof = models.FileField(upload_to="fee_documents/")
     loan_refund_form = models.FileField(upload_to="fee_documents/", blank=True, null=True)

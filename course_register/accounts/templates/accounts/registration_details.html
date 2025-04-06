@@ -225,10 +225,21 @@
 
                         <h4 class="mt-4">Uploaded Documents</h4>
                         <div class="detail-label"><i class="fas fa-file-alt me-2"></i> College Fee Proof:</div>
+
                         <div class="detail-value">
                             <a href="{{ registration.college_fee_proof.url }}" target="_blank" class="file-link">View/Download</a>
                         </div>
 
+                        <div class="detail-label">Grade Sheet:</div>
+                        <div class="detail-value">
+                            {% if registration.grade_sheet %}
+                                <a href="{{ registration.grade_sheet.url }}" target="_blank">View/Download</a>
+                            {% else %}
+                                Not uploaded
+                            {% endif %}
+                        </div> 
+
+                        
                         <div class="detail-label"><i class="fas fa-file-alt me-2"></i> Hostel Fee Proof:</div>
                         <div class="detail-value">
                             <a href="{{ registration.hostel_fee_proof.url }}" target="_blank" class="file-link">View/Download</a>

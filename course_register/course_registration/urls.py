@@ -7,7 +7,7 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path("register/", register_student, name="register_student"),
-    path("success/", registration_success, name="registration_success"),
+    path('success/<int:registration_id>/', registration_success, name='registration_success'),
     path("get_courses/", get_courses, name="get_courses"),
 ]
 

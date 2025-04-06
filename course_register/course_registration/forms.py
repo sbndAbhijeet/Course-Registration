@@ -20,7 +20,8 @@ class StudentRegistrationForm(forms.ModelForm):
         fields = [
             'previous_spi', 'previous_cpi', 'semester_applying_for',
             'selected_courses', 'faculty', 'college_fee_proof',
-            'hostel_fee_proof', 'loan_refund_form'
+            'hostel_fee_proof', 'loan_refund_form',
+            'grade_sheet',
         ]
         # Exclude fields set in the view
         exclude = ['student', 'email', 'name', 'branch_name', 'submitted_at']
