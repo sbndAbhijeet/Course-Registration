@@ -156,8 +156,9 @@ flake8 .
 
 
 ## Contributors
-- Sapparapu Abhijeet (@sbndAbhijeet)
-
+- Sapparapu Abhijeet
+- G Nikhil
+- Keshav Badaya
 
 
 ## Requirements
