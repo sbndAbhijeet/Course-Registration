@@ -1,0 +1,274 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registration Details - IIIT Vadodara</title>
+    <link rel="icon" href="{% static 'images/icon.png' %}" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background-image: url("{% static 'images/c4.png' %}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+        .sidebar {
+            background: #343a40;
+            width: 250px;
+            min-height: 100vh;
+            position: fixed;
+        }
+        .sidebar .nav-link {
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background 0.3s;
+            color: white;
+        }
+        .sidebar .nav-link:hover {
+            background: #495057;
+        }
+        .sidebar .nav-link.active {
+            background: #007bff;
+        }
+        .main-content {
+            min-height: 100vh;
+            margin-left: 250px;
+            width: calc(100% - 250px);
+            padding-bottom: 20px;
+        }
+        .header {
+            background-color: rgba(200, 130, 60, 0.95);
+            padding: 15px 0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        .header:hover {
+            background-color: rgba(180, 115, 50, 0.95);
+        }
+        .logo {
+            height: 90px;
+            filter: brightness(1.2);
+        }
+        .college-name {
+            color: #ffffff;
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-align: center;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+        .navbar-nav .nav-link {
+            color: #ffffff !important;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+        .navbar-nav .nav-link:hover {
+            color: rgba(237, 230, 134, 0.9) !important;
+            text-decoration: none;
+        }
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.7);
+            max-width: 900px;
+            width: 100%;
+            margin: 20px auto;
+        }
+        .card-header {
+            background: linear-gradient(90deg, #007bff, #0056b3);
+            color: white;
+            border-radius: 12px 12px 0 0;
+            padding: 15px;
+            text-align: center;
+        }
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin: 0;
+        }
+        .detail-label {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .detail-value {
+            color: #555;
+            margin-bottom: 15px;
+        }
+        .file-link {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .file-link:hover {
+            text-decoration: underline;
+            color: #0056b3;
+        }
+        .btn-back {
+            background: linear-gradient(90deg, #6c757d, #5a6268);
+            border: none;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+        .btn-back:hover {
+            background: linear-gradient(90deg, #5a6268, #495057);
+        }
+    </style>
+</head>
+<body>
+    <div class="d-flex">
+        <div class="bg-dark text-white sidebar">
+            <div class="p-4">
+                <h4 class="text-center">Faculty Portal</h4>
+                <hr class="bg-light">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link text-white active" href="{% url 'faculty_dashboard' %}">
+                            <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'contact_us' %}">
+                            <i class="fas fa-address-book me-2"></i> Contact Us
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'logout' %}">
+                            <i class="fas fa-sign-out-alt me-2"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <header class="header">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-md-2">
+                            <img src="{% static 'images/icon.png' %}" alt="IIIT Vadodara Logo" class="logo">
+                        </div>
+                        <div class="col-md-6">
+                            <h1 class="college-name">Indian Institute of Information Technology Vadodara</h1>
+                        </div>
+                        <div class="col-md-4">
+                            <nav class="navbar navbar-expand-md">
+                                <div class="container-fluid">
+                                    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                                        <ul class="navbar-nav">
+                                            <li class="nav-item">
+                                                <a class="nav-link" href="{% url 'login' %}">Home</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" href="{% url 'signup' %}">Signup</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" href="{% url 'all_courses' %}">Courses</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link" href="{% url 'contact_us' %}">Contact Us</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="container mt-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Student Registration Details</h2>
+                    </div>
+                    <div class="card-body">
+                        <h4>Student Information</h4>
+                        <div class="detail-label"><i class="fas fa-user me-2"></i> Name:</div>
+                        <div class="detail-value">{{ registration.name }}</div>
+
+                        <div class="detail-label"><i class="fas fa-envelope me-2"></i> Email:</div>
+                        <div class="detail-value">{{ registration.email }}</div>
+
+                        <div class="detail-label"><i class="fas fa-graduation-cap me-2"></i> Previous SPI:</div>
+                        <div class="detail-value">{{ registration.previous_spi }}</div>
+
+                        <div class="detail-label"><i class="fas fa-graduation-cap me-2"></i> Previous CPI:</div>
+                        <div class="detail-value">{{ registration.previous_cpi }}</div>
+
+                        <div class="detail-label"><i class="fas fa-code-branch me-2"></i> Branch:</div>
+                        <div class="detail-value">{{ registration.branch_name }}</div>
+
+                        <div class="detail-label"><i class="fas fa-calendar-alt me-2"></i> Semester Applying For:</div>
+                        <div class="detail-value">{{ registration.semester_applying_for }}</div>
+
+                        <h4 class="mt-4">Course Information</h4>
+                        <div class="detail-label"><i class="fas fa-book me-2"></i> Selected Courses:</div>
+                        <div class="detail-value">
+                            {% for course in registration.selected_courses.all %}
+                                {{ course.name }}{% if not forloop.last %}, {% endif %}
+                            {% empty %}
+                                No courses selected.
+                            {% endfor %}
+                        </div>
+
+                        <h4 class="mt-4">Uploaded Documents</h4>
+                        <div class="detail-label"><i class="fas fa-file-alt me-2"></i> College Fee Proof:</div>
+
+                        <div class="detail-value">
+                            <a href="{{ registration.college_fee_proof.url }}" target="_blank" class="file-link">View/Download</a>
+                        </div>
+
+                        <div class="detail-label">Grade Sheet:</div>
+                        <div class="detail-value">
+                            {% if registration.grade_sheet %}
+                                <a href="{{ registration.grade_sheet.url }}" target="_blank">View/Download</a>
+                            {% else %}
+                                Not uploaded
+                            {% endif %}
+                        </div> 
+
+                        
+                        <div class="detail-label"><i class="fas fa-file-alt me-2"></i> Hostel Fee Proof:</div>
+                        <div class="detail-value">
+                            <a href="{{ registration.hostel_fee_proof.url }}" target="_blank" class="file-link">View/Download</a>
+                        </div>
+
+                        <div class="detail-label"><i class="fas fa-file-alt me-2"></i> Loan Refund Form:</div>
+                        <div class="detail-value">
+                            {% if registration.loan_refund_form %}
+                                <a href="{{ registration.loan_refund_form.url }}" target="_blank" class="file-link">View/Download</a>
+                            {% else %}
+                                Not uploaded.
+                            {% endif %}
+                        </div>
+
+                        <h4 class="mt-4">Submission Details</h4>
+                        <div class="detail-label"><i class="fas fa-calendar-alt me-2"></i> Submitted At:</div>
+                        <div class="detail-value">{{ registration.submitted_at|date:"d M Y, H:i" }}</div>
+
+                        <div class="mt-4">
+                            <a href="{% url 'faculty_dashboard' %}" class="btn btn-back">
+                                <i class="fas fa-arrow-left me-2"></i> Back to Dashboard
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

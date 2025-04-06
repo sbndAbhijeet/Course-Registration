@@ -1,0 +1,334 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact Us - IIIT Vadodara</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .sidebar {
+            background: #343a40;
+            width: 250px;
+            min-height: 100vh;
+            position: fixed;
+        }
+        .sidebar .nav-link {
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background 0.3s;
+            color: white;
+        }
+        .sidebar .nav-link:hover {
+            background: #495057;
+        }
+        .sidebar .nav-link.active {
+            background: #007bff;
+        }
+        .main-content {
+            min-height: 100vh;
+            margin-left: 250px;
+            width: calc(100% - 250px);
+            padding-bottom: 20px;
+        }
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            background: white;
+        }
+        .contact-header {
+            background: linear-gradient(90deg, #007bff, #0056b3);
+            color: white;
+            padding: 50px 0;
+            text-align: center;
+            margin-bottom: 40px;
+            border-radius: 10px 10px 0 0;
+        }
+        .contact-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+        .contact-header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+        .contact-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-bottom: 30px;
+            transition: transform 0.3s;
+        }
+        .contact-card:hover {
+            transform: translateY(-5px);
+        }
+        .contact-card i {
+            font-size: 2rem;
+            color: #007bff;
+            margin-bottom: 15px;
+        }
+        .contact-card h5 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        .contact-card p {
+            margin: 0;
+            color: #555;
+        }
+        .advisor-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            transition: transform 0.3s;
+        }
+        .advisor-card:hover {
+            transform: translateY(-5px);
+        }
+        .advisor-card img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-right: 15px;
+            object-fit: cover;
+        }
+        .advisor-card h6 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        .advisor-card p {
+            margin: 0;
+            color: #555;
+            font-size: 0.9rem;
+        }
+        .advisor-card i {
+            color: #007bff;
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Container -->
+    <div class="d-flex">
+        <!-- Sidebar -->
+        <div class="bg-dark text-white sidebar">
+            <div class="p-4">
+                <h4 class="text-center">Course Registration</h4>
+                <hr class="bg-light">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'dashboard' %}">
+                            <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'register_student' %}">
+                            <i class="fas fa-book me-2"></i> Register for a Semester
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'all_courses' %}">
+                            <i class="fas fa-list me-2"></i> View All Courses
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white active" href="{% url 'contact_us' %}">
+                            <i class="fas fa-address-book me-2"></i> Contact Us
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="{% url 'logout' %}">
+                            <i class="fas fa-sign-out-alt me-2"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Navbar -->
+            <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="{% url 'dashboard' %}">
+                        <img src="{% static 'images/institute1.png' %}" alt="Institute Logo" style="height: 40px;">
+                        IIIT Vadodara
+                    </a>
+                    <div class="ms-auto d-flex align-items-center">
+                        <span class="me-3 text-muted">Welcome, {{ request.session.student_email }} 😁</span>
+                        <a href="{% url 'logout' %}" class="btn btn-danger btn-sm">Logout</a>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Contact Content -->
+            <div class="container mt-4">
+                <div class="card">
+                    <div class="card-body">
+                        <!-- Header Section -->
+                        <div class="contact-header">
+                            <div class="container">
+                                <h1>Contact Us</h1>
+                                <p>Reach out to us for any inquiries or support. We're here to help!</p>
+                            </div>
+                        </div>
+
+                        <!-- Contact Information Section -->
+                        <div class="row">
+                            <!-- Address -->
+                            <div class="col-md-4">
+                                <div class="contact-card text-center">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <h5>Address</h5>
+                                    <p>C/O Block No. 9<br>
+                                       Government Engineering College<br>
+                                       Sector-28, Gandhinagar<br>
+                                       Gujarat - 382028</p>
+                                </div>
+                            </div>
+                            <!-- Email -->
+                            <div class="col-md-4">
+                                <div class="contact-card text-center">
+                                    <i class="fas fa-envelope"></i>
+                                    <h5>Email</h5>
+                                    <p><a href="mailto:administration@iiitvadodara.ac.in" style="color: #007bff; text-decoration: none;">administration@iiitvadodara.ac.in</a></p>
+                                </div>
+                            </div>
+                            <!-- Phone -->
+                            <div class="col-md-4">
+                                <div class="contact-card text-center">
+                                    <i class="fas fa-phone-alt"></i>
+                                    <h5>Phone</h5>
+                                    <p>+91-79-29750281<br>+91-8849303883</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Faculty Advisors Section -->
+                        <h3 class="text-center mt-5 mb-4">Our Faculty Advisors</h3>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="advisor-card">
+                                    <div>
+                                        <h6>Dr. Vivek M. Vyas</h6>
+                                        <p><i class="fas fa-envelope"></i> <a href="mailto:vivek.vyas@iiitvadodara.ac.in" style="color: #007bff; text-decoration: none;">vivek.vyas@iiitvadodara.ac.in</a></p>
+                                        <p><i class="fas fa-graduation-cap"></i> Batch: 2021-22 (Section A)</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="advisor-card">
+                                    <div>
+                                        <h6>Dr. Barnali Chetia</h6>
+                                        <p><i class="fas fa-envelope"></i> <a href="mailto:barnali@iiitvadodara.ac.in" style="color: #007bff; text-decoration: none;">barnali@iiitvadodara.ac.in</a></p>
+                                        <p><i class="fas fa-graduation-cap"></i> Batch: 2021-22 (Section B)</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="advisor-card">
+                                    <div>
+                                        <h6>Dr. Naveen Kumar</h6>
+                                        <p><i class="fas fa-envelope"></i> <a href="mailto:naveen_kumar@iiitvadodara.ac.in" style="color: #007bff; text-decoration: none;">naveen_kumar@iiitvadodara.ac.in</a></p>
+                                        <p><i class="fas fa-graduation-cap"></i> Batch: 2022-23 (Section A)</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="advisor-card">
+                                    <div>
+                                        <h6>Dr. Sunandita Debnath</h6>
+                                        <p><i class="fas fa-envelope"></i> <a href="mailto:sunandita_debnath@iiitvadodara.ac.in" style="color: #007bff; text-decoration: none;">sunandita_debnath@iiitvadodara.ac.in</a></p>
+                                        <p><i class="fas fa-graduation-cap"></i> Batch: 2022-23 (Section B)</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="advisor-card">
+                                    <div>
+                                        <h6>Dr. Kamal Kishor Jha</h6>
+                                        <p><i class="fas fa-envelope"></i> <a href="mailto:kamal@iiitvadodara.ac.in" style="color: #007bff; text-decoration: none;">kamal@iiitvadodara.ac.in</a></p>
+                                        <p><i class="fas fa-graduation-cap"></i> Batch: 2023-24 (Section A)</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="advisor-card">
+                                    <div>
+                                        <h6>Dr. Bhupendra Kumar</h6>
+                                        <p><i class="fas fa-envelope"></i> <a href="mailto:bhupendra_kumar@iiitvadodara.ac.in" style="color: #007bff; text-decoration: none;">bhupendra_kumar@iiitvadodara.ac.in</a></p>
+                                        <p><i class="fas fa-graduation-cap"></i> Batch: 2023-24 (Section B)</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="advisor-card">
+                                    <div>
+                                        <h6>Dr. Swapnil Lokhande</h6>
+                                        <p><i class="fas fa-envelope"></i> <a href="mailto:swapnil@iiitvadodara.ac.in" style="color: #007bff; text-decoration: none;">swapnil@iiitvadodara.ac.in</a></p>
+                                        <p><i class="fas fa-graduation-cap"></i> Batch: 2024-25 (Section A)</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6">
+                                <div class="advisor-card">
+                                    <div>
+                                        <h6>Dr. Ravi Nahta</h6>
+                                        <p><i class="fas fa-envelope"></i> <a href="mailto:ravi_nahta@iiitvadodara.ac.in" style="color: #007bff; text-decoration: none;">ravi_nahta@iiitvadodara.ac.in</a></p>
+                                        <p><i class="fas fa-graduation-cap"></i> Batch: 2024-25 (Section B)</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            {% for advisor in faculty_advisors %}
+                                <div class="col-md-6">
+                                    <div class="advisor-card">
+                                        <!-- Placeholder image (replace with advisor.image if available) -->
+                                        <img src="https://via.placeholder.com/60" alt="{{ advisor.name }}" />
+                                        <div>
+                                            <h6>{{ advisor.name }}</h6>
+                                            <p><i class="fas fa-envelope"></i> <a href="mailto:{{ advisor.email }}" style="color: #007bff; text-decoration: none;">{{ advisor.email }}</a></p>
+                                            <p><i class="fas fa-graduation-cap"></i> Batch: {{ advisor.academic_batch }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% empty %}
+                                <div class="col-12 text-center">
+                                    <p>No faculty advisors available at the moment.</p>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Font Awesome for Icons -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+</body>
+</html>
