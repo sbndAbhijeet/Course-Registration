@@ -2,6 +2,11 @@
 
 A comprehensive web-based course registration system for IIIT Vadodara, built with Django. This system allows students to register for courses, faculty to review registrations, and administrators to manage the entire process.
 
+## Demo Video
+
+[![Video](https://img.youtube.com/vi/OBXQ4eDvNDw/0.jpg)](https://youtu.be/OBXQ4eDvNDw)
+
+
 ## 🌟 Features
 
 ### For Students
