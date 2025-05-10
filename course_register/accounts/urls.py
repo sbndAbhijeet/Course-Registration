@@ -5,6 +5,9 @@ from . import views
 from .views import view_excel_file
 urlpatterns = [
     path('', views.login, name='login'),  # Maps to /login/
+    path('login/', views.login, name='login'),
+    path('accounts/dashboard/', views.dashboard, name='dashboard'),
+    path('accounts/faculty_dashboard/', views.faculty_dashboard, name='faculty_dashboard'),
     path('signup/', views.signup, name='signup'),
     path('otp_verification/', views.otp_verification, name='otp_verification'),
     path('dashboard/', views.dashboard, name='dashboard'),
@@ -15,6 +18,7 @@ urlpatterns = [
     path('forgot_password/', views.forgot_password, name='forgot_password'),
     path('reset_password/', views.reset_password, name='reset_password'),
     path('profile/', views.profile, name='profile'),
+    path('faculty_profile/', views.profile, name='faculty_profile'),
     path('registration/<int:registration_id>/', views.registration_details, name='registration_details'),
     path('update_registration_status/<int:registration_id>/', views.update_registration_status, name='update_registration_status'),
 

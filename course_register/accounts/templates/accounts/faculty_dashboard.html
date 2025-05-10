@@ -198,9 +198,10 @@
                             <i class="fas fa-tachometer-alt me-2"></i> Dashboard
                         </a>
                     </li>
+                    
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="{% url 'contact_us' %}">
-                            <i class="fas fa-address-book me-2"></i> Contact Us
+                        <a class="nav-link" href="{% url 'faculty_profile' %}">
+                            <i class="fas fa-user me-2"></i> View Profile
                         </a>
                     </li>
                     <li class="nav-item">
@@ -261,9 +262,17 @@
                             {% endfor %}
                         {% endif %}
 
-                        <h4>Welcome, {{ faculty.name }}</h4>
-                        <p><strong>Email:</strong> {{ faculty.email }}</p>
-                        <p><strong>Department:</strong> {{ faculty.department }}</p>
+                        <div class="card-body d-flex align-items-center justify-content-between">
+                        <div>
+                            <h4>Welcome, {{ faculty.name }}</h4>
+                            <p><strong>Email:</strong> {{ faculty.email }}</p>
+                            <p><strong>Department:</strong> {{ faculty.department }}</p>
+                        </div>
+                        
+                        <div class="text-center">   
+                            <img src="{% if faculty.profile_image %}{{ faculty.profile_image.url }}{% else %}{% static 'images/default.png' %}{% endif %}" alt="Profile" class="rounded-circle shadow-sm mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+                        </div>
+                        </div>
 
                         <!-- Analytics Section -->
                         <div class="analytics-box">

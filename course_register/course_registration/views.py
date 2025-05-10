@@ -10,7 +10,7 @@ from django.contrib.auth import logout
 from django.core.mail import send_mail
 from django.conf import settings
 
-@login_required
+
 def register_student(request):
     student_email = request.session.get("student_email")
 
@@ -74,7 +74,7 @@ def register_student(request):
     print("Faculty Advisors:", list(faculty_advisors))  # Debug: Check if data exists
     return render(request, "course_registration/register.html", {"form": form})
 
-@login_required
+
 def registration_success(request, registration_id):
     print("Session user_type:", request.session.get('user_type'))
     email = request.session.get('student_email')

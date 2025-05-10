@@ -21,27 +21,30 @@ logger = logging.getLogger(__name__)
 
 # Helper function to check if the user is logged in
 def is_authenticated(request):
-    return request.user.is_authenticated or 'student_email' in request.session
+    return request.user.is_authenticated or 'student_email' in request.session or 'faculty_email' in request.session
 
 def login(request):
+    print('hello')
     if request.method == 'POST':
+        print('hello1')
         form = LoginForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
             role = form.cleaned_data['role']
-            logger.info(f"Login attempt with username: {username}, role: {role}")
+            logger.info(f"Login attempt: username={username}, role={role}")
             try:
                 student = Student.objects.get(email=username)
                 if check_password(password, student.password):
-                    # Set session variable to indicate the user is logged in
                     request.session['student_email'] = student.email
                     request.session['role'] = 'student'
-                    print('role: ', request.session['role'])
-                    
+                    request.session.modified = True  # Ensure session is saved
+                    logger.info(f"Student login successful: {username}")
                     messages.success(request, "Logged in successfully!")
-                    return redirect('dashboard')
+                    print(request.session['student_email'])
+                    return redirect('dashboard')  # Direct redirect
                 else:
+                    logger.warning(f"Invalid password for student: {username}")
                     form.add_error(None, "Invalid credentials.")
             except Student.DoesNotExist:
                 try:
@@ -49,13 +52,22 @@ def login(request):
                     if check_password(password, faculty.password):
                         request.session['faculty_email'] = faculty.email
                         request.session['role'] = 'faculty'
-                        print('role: ', request.session['role'])
+                        request.session.modified = True  # Ensure session is saved
+                        logger.info(f"Faculty login successful: {username}")
                         messages.success(request, "Logged in successfully!")
-                        return redirect('faculty_dashboard')
+                        print(request.session)
+                        return redirect('faculty_dashboard')  # Direct redirect
                     else:
+                        logger.warning(f"Invalid password for faculty: {username}")
                         messages.error(request, "Invalid credentials.")
                 except Faculty.DoesNotExist:
+                    logger.warning(f"User does not exist: {username}")
                     messages.error(request, "User does not exist.")
+            except Exception as e:
+                logger.error(f"Unexpected error: {str(e)}")
+                messages.error(request, "An error occurred. Please try again.")
+        else:
+            logger.warning(f"Form errors: {form.errors}")
     else:
         form = LoginForm()
     return render(request, 'accounts/login.html', {'form': form})
@@ -234,37 +246,31 @@ def contact_us(request):
     print("Faculty Advisors fetched:", list(faculty_advisors))  # Debug
     return render(request, 'accounts/contact_us.html', {'faculty_advisors': faculty_advisors})
 
-@login_required
 def dashboard(request):
-    student_email = request.session.get("student_email")
-    print('role: ', request.session['role'])
-    if not student_email:
+    if not is_authenticated(request):
+        messages.error(request, "You need to log in to access this page.")
         return redirect('login')
-    
+    student_email = request.session.get("student_email")
+    if not student_email:
+        messages.error(request, "Session expired. Please log in again.")
+        return redirect('login')
     student = get_object_or_404(Student, email=student_email)
-
-    # Fetch the most recent submitted registration
     registration = StudentRegistration.objects.filter(student=student).first()
-    
     return render(request, 'accounts/dashboard.html', {
         'student': student,
         'registration': registration,
     })
 
-
-
-@login_required
 def faculty_dashboard(request):
-    faculty_email = request.session.get('faculty_email')
-    print('role: ', request.session['role'])
-    if not faculty_email:
-        messages.error(request, "User session expired. Please log in again.")
+    if not is_authenticated(request):
+        messages.error(request, "You need to log in to access this page.")
         return redirect('login')
-    
+    faculty_email = request.session.get('faculty_email')
+    if not faculty_email:
+        messages.error(request, "Session expired. Please log in again.")
+        return redirect('login')
     faculty = get_object_or_404(Faculty, email=faculty_email)
     registrations = StudentRegistration.objects.filter(faculty=faculty)
-
-    # Calculate status counts
     status_counts = {
         'In Progress': registrations.filter(status='InProgress').count(),
         'Issues': registrations.filter(status='Issues').count(),
@@ -272,14 +278,13 @@ def faculty_dashboard(request):
         'Accepted': registrations.filter(status='Accepted').count(),
         'Total': registrations.count(),
     }
-
     return render(request, 'accounts/faculty_dashboard.html', {
         'faculty': faculty,
         'registrations': registrations,
         'status_counts': status_counts,
     })
 
-@login_required
+
 def registration_details(request, registration_id):
     faculty_email = request.session.get('faculty_email')
     print('role: ', request.session['role'])
@@ -298,38 +303,71 @@ def registration_details(request, registration_id):
 
     return render(request, 'accounts/registration_details.html', {'registration': registration, 'faculty': faculty})
 
-@login_required
+
 def profile(request):
-    student_email = request.session.get("student_email")
-    if not student_email:
-        return redirect('login?toast_type=error&toast_title=Error&toast_message=You need to log in to access this page.')
+    email = request.session.get("student_email")
+    if email in Student.objects.values_list('email', flat=True):
+        student = get_object_or_404(Student, email=email)
+    print(email)
+    if not email in Student.objects.values_list('email', flat=True):
+        email = request.session.get("faculty_email")
+        faculty = get_object_or_404(Faculty, email=email)
 
-    student = get_object_or_404(Student, email=student_email)
+    print(email)
+    
 
-    if request.method == 'POST':
-        student.student_name = request.POST.get('student_name', student.student_name)
-        student.gender = request.POST.get('gender', student.gender)
-        student.college_id = request.POST.get('college_id', student.college_id)
-        student.department = request.POST.get('department', student.department)
-        student.year_of_study = request.POST.get('year_of_study', student.year_of_study)
-        student.phone_number = request.POST.get('phone_number', student.phone_number)
-        student.address = request.POST.get('address', student.address)
-        student.date_of_birth = request.POST.get('date_of_birth', student.date_of_birth)
+    if email in Student.objects.values_list('email', flat=True):
+        if request.method == 'POST':
+            student.student_name = request.POST.get('student_name', student.student_name)
+            student.gender = request.POST.get('gender', student.gender)
+            student.college_id = request.POST.get('college_id', student.college_id)
+            student.department = request.POST.get('department', student.department)
+            student.year_of_study = request.POST.get('year_of_study', student.year_of_study)
+            student.phone_number = request.POST.get('phone_number', student.phone_number)
+            student.address = request.POST.get('address', student.address)
+            student.date_of_birth = request.POST.get('date_of_birth', student.date_of_birth)
 
-        # Handle password change (only if provided)
-        new_password = request.POST.get('password')
-        confirm_password = request.POST.get('confirm_password')
-        if new_password:
-            student.password = make_password(new_password)
+            # Handle password change (only if provided)
+            new_password = request.POST.get('password')
+            confirm_password = request.POST.get('confirm_password')
+            if new_password:
+                student.password = make_password(new_password)
 
-        # Handle profile image upload
-        if 'profile_image' in request.FILES:
-            student.profile_image = request.FILES['profile_image']
+            # Handle profile image upload
+            if 'profile_image' in request.FILES:
+                student.profile_image = request.FILES['profile_image']
 
-        student.save()
-        return redirect('profile')  # Redirect back to profile page
+            student.save()
+            return redirect('profile')  # Redirect back to profile page
 
-    return render(request, 'accounts/profile.html', {'student': student})
+        return render(request, 'accounts/profile.html', {'student': student})
+    else:
+        
+        faculty = get_object_or_404(Faculty, email=email)
+        if request.method == 'POST':
+            faculty.profile_image = request.POST.get('profile_image', faculty.profile_image)
+            faculty.name = request.POST.get('faculty_name', faculty.name)
+            faculty.gender = request.POST.get('gender', faculty.gender)
+            faculty.department = request.POST.get('department', faculty.department)
+            faculty.academic_batch = request.POST.get('academic_batch', faculty.academic_batch)
+            faculty.phone_number = request.POST.get('phone_number', faculty.phone_number)
+            faculty.address = request.POST.get('address', faculty.address)
+            faculty.date_of_birth = request.POST.get('date_of_birth', faculty.date_of_birth)
+
+            # Handle password change (only if provided)
+            new_password = request.POST.get('password')
+            confirm_password = request.POST.get('confirm_password')
+            if new_password:
+                faculty.password = make_password(new_password)
+
+            # Handle profile image upload
+            if 'profile_image' in request.FILES:
+                faculty.profile_image = request.FILES['profile_image']
+
+            faculty.save()
+            return redirect('faculty_profile')  # Redirect back to profile page
+
+        return render(request, 'accounts/faculty_profile.html', {'student': faculty})
 
 
 # Implement the Status Update Logic
@@ -383,8 +421,6 @@ def update_registration_status(request, registration_id):
             )
         else:
             messages.error(request, "Invalid status selected.")
-
-
     return redirect('registration_details', registration_id=registration_id)
 
 

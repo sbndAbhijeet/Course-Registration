@@ -56,6 +56,7 @@ INSTALLED_APPS = [
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -157,4 +158,4 @@ DEFAULT_FROM_EMAIL = os.getenv('EMAIL_HOST_USER')  # Use the same email address 
 FACULTY_SECRET_CODE = os.getenv('FACULTY_SECRET_CODE')
 
 LOGIN_URL = '/login/' 
-LOGIN_REDIRECT_URL = '/login/dashboard/'
+# LOGIN_REDIRECT_URL = '/login/dashboard/'
