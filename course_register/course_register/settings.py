@@ -33,7 +33,12 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['.onrender.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "course-registration-q0jy.onrender.com",  # your exact Render domain
+    ".onrender.com",                          # wildcard for any Render subdomain
+]
 
 
 
