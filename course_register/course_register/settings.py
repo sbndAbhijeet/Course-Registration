@@ -36,8 +36,8 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 ALLOWED_HOSTS = [
     "localhost",
     "127.0.0.1",
-    "course-registration-q0jy.onrender.com",  # your exact Render domain
-    ".onrender.com",                          # wildcard for any Render subdomain
+    "course-registration-q0jy.onrender.com",  
+    ".onrender.com",
 ]
 
 
