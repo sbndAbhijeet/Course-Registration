@@ -28,12 +28,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-ue4-hcfsg+vsgov_p*c90!m_!kuk(c+ujr=&g*bewc=lh4@srl'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['iiitv-course-registration.onrender.com']
 
 
 # Application definition
@@ -59,6 +59,7 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -91,12 +92,20 @@ WSGI_APPLICATION = 'course_register.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# Default: local SQLite database
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# Override if DATABASE_URL is set (Render / production)
+import dj_database_url
+db_from_env = dj_database_url.config(default=os.getenv('DATABASE_URL'), conn_max_age=600)
+if db_from_env:
+    DATABASES['default'] = db_from_env
+
 
 
 # Password validation
@@ -135,10 +144,13 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -158,4 +170,5 @@ DEFAULT_FROM_EMAIL = os.getenv('EMAIL_HOST_USER')  # Use the same email address 
 FACULTY_SECRET_CODE = os.getenv('FACULTY_SECRET_CODE')
 
 LOGIN_URL = '/login/' 
+
 # LOGIN_REDIRECT_URL = '/login/dashboard/'
