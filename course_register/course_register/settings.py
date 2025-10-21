@@ -92,12 +92,20 @@ WSGI_APPLICATION = 'course_register.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# Default: local SQLite database
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+# Override if DATABASE_URL is set (Render / production)
+import dj_database_url
+db_from_env = dj_database_url.config(default=os.getenv('DATABASE_URL'), conn_max_age=600)
+if db_from_env:
+    DATABASES['default'] = db_from_env
+
 
 
 # Password validation
