@@ -33,7 +33,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['iiitv-course-registration.onrender.com']
+ALLOWED_HOSTS = ['*.onrender.com']
 
 
 # Application definition
